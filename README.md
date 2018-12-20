@@ -5,6 +5,7 @@
 ###### Supervisor: @github/cesardiaz-dev
 
 ### Requerimientos
+###### Integrar y utilizar SWAGGER para la publicación de API RESTful Todos deberan tener un Dashboard para el administrador para porder revisar que ha pasado en el sistema.
 - [ ] Usuario puede crear un documento.
 - [ ] A un documento se le pueden agregar varios archivos.
 - [ ] A un documento se le agregará un titulo, una descripcion y varias etiquetas para catalogar este documento en el sistema.
@@ -15,3 +16,22 @@
 - [ ] Base de Datos NoSQL.
 
 ### Refininamiento Requerimientos
+- Un documento puede ser visto como una carpeta que contiene archivos.
+- Cada archivo debe contar con etiquetas y una descripcion que permita tener una idea general del contenido del archivo.
+- Editar un archivo conciste en reemplazar un archivo viejo por uno nuevo.
+
+### Tareas del Proyecto
+- [X] Refinamiento de Requisitos (1 dia).
+- [ ] Casos de uso (2 dias).
+- [ ] Especificacion de casos de usos (2 dias).
+- [ ] Mockups MockingBots (2 dias).
+- [ ] Diseño Arquitectura (1 dia).
+- [ ] Diagrama de Secuencias (1 dia).
+- [ ] Diagrama de Estados (1 dia).
+- [ ] Diagrama de Componentes (2 dias).
+- [ ] Modelo de Datos (1 dias).
+- [ ] Capacitacion Angular (2 dias).
+- [ ] SprngBoot DataMongo (1 dia).
+- [ ] Repaso de Mongo BDnR (1 dia).
+
+# Tiempo Aproximado del desarrollo: 15 Dias.
