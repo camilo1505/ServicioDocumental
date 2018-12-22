@@ -7,13 +7,13 @@
 ### Requerimientos
 ###### Integrar y utilizar SWAGGER para la publicación de API RESTful Todos deberan tener un Dashboard para el administrador para porder revisar que ha pasado en el sistema.
 - [x] Usuario puede crear un documento.
-- [ ] A un documento se le pueden agregar varios archivos.
+- [x] A un documento se le pueden agregar varios archivos.
 - [x] A un documento se le agregará un titulo, una descripcion y varias etiquetas para catalogar este documento en el sistema.
 - [x] Un documento puede estar en borrador (aun sin terminar) o público (para consulta de otros usuarios). Estos estados los puede asignar el propietario en cualquier momento.
 - [x] Los documentos solo pueden ser editados por el usuario que lo creó o por el administrador.
-- [ ] Para buscar un documento agregado, se puede consultar por nombre, usuario que lo agregó o segun las etiquetas que le haya etiquetado.
-- [ ] El sistema permitirá visualizar (ojalá en linea) los archivos que han sido cargados al documento (como lo hace GMAIL).
-- [ ] Base de Datos NoSQL.
+- [x] Para buscar un documento agregado, se puede consultar por nombre, usuario que lo agregó o segun las etiquetas que le haya etiquetado.
+- [x] El sistema permitirá visualizar (ojalá en linea) los archivos que han sido cargados al documento (como lo hace GMAIL).
+- [x] Base de Datos NoSQL.
 
 ### Refininamiento Requerimientos
 - Un documento puede ser visto como una carpeta que contiene archivos.
@@ -27,7 +27,7 @@
 
 ### Tareas del Proyecto
 - [X] Refinamiento de Requisitos (1 dia).
-- [ ] Casos de uso (2 dias).
+- [x] Casos de uso (2 dias).
 - [ ] Especificacion de casos de usos (2 dias).
 - [ ] Mockups MockingBots (2 dias).
 - [ ] Diseño Arquitectura (1 dia).
