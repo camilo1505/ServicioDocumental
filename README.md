@@ -17,7 +17,7 @@
 
 ### Refininamiento Requerimientos
 - Un documento puede ser visto como una carpeta que contiene archivos.
-- Cada archivo debe contar con etiquetas y una descripcion que permita tener una idea general del contenido del archivo.
+- Cada Documento debe contar con etiquetas (nueva o ya registrada) y una descripcion que permita tener una idea general del contenido del documento.
 - Editar un archivo conciste en reemplazar un archivo viejo por uno nuevo.
 
 ### Tareas del Proyecto
