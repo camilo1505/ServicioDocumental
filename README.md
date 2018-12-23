@@ -18,7 +18,6 @@
 ### Refininamiento Requerimientos
 - Un documento puede ser visto como una carpeta que contiene archivos.
 - Cada Documento debe contar con etiquetas (nueva o ya registrada) y una descripcion que permita tener una idea general del contenido del documento.
-- Editar un archivo conciste en reemplazar un archivo viejo por uno nuevo.
 - Cuando el estado de un Documento es Borrador, solo el propietario y el administrador lo pueden ver.
 - Cuando el estado de un Documento es Publico, el documento aparece en las consultas de todos los usuarios.
 - Un Documento solo puede ser editado cuando su estado es de Borrador.
