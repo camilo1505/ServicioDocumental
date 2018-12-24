@@ -27,7 +27,7 @@
 ### Tareas del Proyecto
 - [X] Refinamiento de Requisitos (1 dia).
 - [x] Casos de uso (2 dias).
-- [ ] Especificacion de casos de usos (2 dias).
+- [x] Especificacion de casos de usos (2 dias).
 - [ ] Mockups MockingBots (2 dias).
 - [ ] Diseño Arquitectura (1 dia).
 - [ ] Diagrama de Secuencias (1 dia).
