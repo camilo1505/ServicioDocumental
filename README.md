@@ -28,10 +28,9 @@
 - [X] Refinamiento de Requisitos (1 dia).
 - [x] Casos de uso (2 dias).
 - [x] Especificacion de casos de usos (2 dias).
-- [ ] Mockups MockingBots (2 dias).
 - [ ] Diseño Arquitectura (1 dia).
-- [ ] Diagrama de Secuencias (1 dia).
-- [ ] Diagrama de Estados (1 dia).
+- [ ] Diagrama de Actividades (1 dia).
+- [ ] Diagrama de Secuencia (1 dia).
 - [ ] Diagrama de Componentes (2 dias).
 - [ ] Modelo de Datos (1 dias).
 - [ ] Capacitacion Angular (2 dias).
