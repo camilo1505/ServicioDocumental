@@ -32,12 +32,11 @@
 - [x] Casos de uso (2 dias).
 - [x] Especificacion de casos de usos (2 dias).
 - [ ] Diseño Arquitectura (1 dia).
-- [ ] Diagrama de Actividades (1 dia).
-- [ ] Diagrama de Secuencia (1 dia).
-- [ ] Diagrama de Componentes (2 dias).
-- [ ] Modelo de Datos (1 dias).
+- [x] Diagrama de Actividades (1 dia).
+- [x] Diagrama de Secuencia (1 dia).
+- [x] Modelo de Datos (1 dias).
 - [ ] Capacitacion Angular (2 dias).
-- [ ] SprngBoot DataMongo (1 dia).
+- [ ] SpringBoot DataMongo (1 dia).
 - [ ] Repaso de Mongo BDnR (1 dia).
 
 # Tiempo Aproximado del desarrollo: 15 Dias.
