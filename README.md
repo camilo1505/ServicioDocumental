@@ -31,7 +31,6 @@
 - [X] Refinamiento de Requisitos (1 dia).
 - [x] Casos de uso (2 dias).
 - [x] Especificacion de casos de usos (2 dias).
-- [ ] Diseño Arquitectura (1 dia).
 - [x] Diagrama de Actividades (1 dia).
 - [x] Diagrama de Secuencia (1 dia).
 - [x] Modelo de Datos (1 dias).
