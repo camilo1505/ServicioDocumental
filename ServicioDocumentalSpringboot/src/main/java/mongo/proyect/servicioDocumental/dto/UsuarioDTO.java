@@ -5,23 +5,25 @@
  */
 package mongo.proyect.servicioDocumental.dto;
 
+import org.bson.types.ObjectId;
+
 /**
  *
  * @author junpa
  */
 public class UsuarioDTO {
-    private Long id;
+    private ObjectId id;
     
     private String nombre;
-    private String userNamer;
+    private String usuario;
     private String password;
     private String tipoUsuario;
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -33,12 +35,12 @@ public class UsuarioDTO {
         this.nombre = nombre;
     }
 
-    public String getUserNamer() {
-        return userNamer;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setUserNamer(String userNamer) {
-        this.userNamer = userNamer;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public String getPassword() {

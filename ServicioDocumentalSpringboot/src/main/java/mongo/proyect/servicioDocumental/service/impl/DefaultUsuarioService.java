@@ -59,8 +59,8 @@ public class DefaultUsuarioService implements UsuarioService{
     public UsuarioDTO crearUsuario(String Nombre, String Usuario, String Password, String tipoUsuario) {
         Optional<Usuario> usuario = null;
         UsuarioDTO usuarioDTO = null;
-        Usuario auxiliar = null;
-        usuario = usuarioRepository.findByUsuario(Nombre);
+        Usuario auxiliar = new Usuario();
+        usuario = usuarioRepository.findByUsuario(Usuario);
         if(!usuario.isPresent()){
             auxiliar.setNombre(Nombre);
             auxiliar.setPassword(Password);

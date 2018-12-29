@@ -8,6 +8,7 @@ package mongo.proyect.servicioDocumental.repository;
 import java.util.Optional;
 import mongo.proyect.servicioDocumental.entity.Usuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UsuarioRepository extends MongoRepository<Usuario, Long> {
-
+    
+    @Query("{usuario:'?0'}, { unique: true }")
     Optional<Usuario> findByUsuario( String Nombre);
+    
 }
