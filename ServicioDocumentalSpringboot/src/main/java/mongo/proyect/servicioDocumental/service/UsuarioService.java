@@ -5,7 +5,7 @@
  */
 package mongo.proyect.servicioDocumental.service;
 
-import mongo.proyect.servicioDocumental.entity.Usuario;
+import mongo.proyect.servicioDocumental.dto.UsuarioDTO;
 
 /**
  *
@@ -13,6 +13,15 @@ import mongo.proyect.servicioDocumental.entity.Usuario;
  */
 public interface UsuarioService {
     
-    Usuario buscarUsuario(String Nombre);
+    UsuarioDTO buscarUsuario(String Usuario, String Password);
+    
+    String tipoUsuario(String Usuario);
+    
+    UsuarioDTO crearUsuario(String Nombre, String Usuario, String Password, String tipoUsuario);
+
+    String cambiarTipoUsuario(String Usuario,String Password);
+    
+    UsuarioDTO cambiarPasswordUsuario(String Usuario, String Password);
+    
     
 }

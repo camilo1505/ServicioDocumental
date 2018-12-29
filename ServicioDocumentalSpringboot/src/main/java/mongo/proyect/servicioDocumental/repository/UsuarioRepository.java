@@ -5,10 +5,9 @@
  */
 package mongo.proyect.servicioDocumental.repository;
 
+import java.util.Optional;
 import mongo.proyect.servicioDocumental.entity.Usuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -18,5 +17,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UsuarioRepository extends MongoRepository<Usuario, Long> {
 
-    Usuario findByUsuario( String Nombre);
+    Optional<Usuario> findByUsuario( String Nombre);
 }
