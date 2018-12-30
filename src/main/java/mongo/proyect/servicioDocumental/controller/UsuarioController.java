@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,9 +27,9 @@ public class UsuarioController {
     private UsuarioService usuarioService;
     
     @GetMapping("/consultarUsuario")
-    public ResponseEntity<?> consultarUsuario(@RequestParam("Usuario") String Usuario,@RequestParam("password") String Password){
+    public ResponseEntity<?> consultarUsuario(@RequestBody UsuarioDTO Usuario){
         UsuarioDTO usuarioDTO = null;
-        usuarioDTO = usuarioService.buscarUsuario(Usuario,Password);
+        usuarioDTO = usuarioService.buscarUsuario(Usuario);
         if(usuarioDTO!=null){
             return ResponseEntity.ok(usuarioDTO);
         }
@@ -36,7 +37,7 @@ public class UsuarioController {
     }
     
     @GetMapping("/tipoUsuario")
-    public ResponseEntity<?> tipoUsuario(@RequestParam("Usuario") String Usuario){
+    public ResponseEntity<?> tipoUsuario(@RequestBody UsuarioDTO Usuario){
         String usuarioDTO = null;
         usuarioDTO = usuarioService.tipoUsuario(Usuario);
         if(usuarioDTO!=null){
@@ -46,9 +47,9 @@ public class UsuarioController {
     }
     
     @GetMapping("/crearUsuario")
-    public ResponseEntity<?> crearUsuario(@RequestParam("nombre") String Nombre,@RequestParam("usuario") String Usuario,@RequestParam("password") String Password,@RequestParam("tipoUsuario") String tipoUsuario){
+    public ResponseEntity<?> crearUsuario(@RequestBody UsuarioDTO Usuario){
         UsuarioDTO usuarioDTO = null;
-        usuarioDTO = usuarioService.crearUsuario(Nombre, Usuario, Password, tipoUsuario);
+        usuarioDTO = usuarioService.crearUsuario(Usuario);
         if(usuarioDTO!=null){
             return ResponseEntity.ok(usuarioDTO);
         }
@@ -56,9 +57,9 @@ public class UsuarioController {
     }
     
     @PutMapping("/cambiarTipoUsuario")
-    public ResponseEntity<?> cambiarTipoUsuario(@RequestParam("Usuario") String Usuario,@RequestParam("password") String Password){
+    public ResponseEntity<?> cambiarTipoUsuario(@RequestBody UsuarioDTO Usuario){
         String usuarioDTO = null;
-        usuarioDTO = usuarioService.cambiarTipoUsuario(Usuario,Password);
+        usuarioDTO = usuarioService.cambiarTipoUsuario(Usuario);
         if(usuarioDTO!=null){
             return ResponseEntity.ok(usuarioDTO);
         }
@@ -66,9 +67,9 @@ public class UsuarioController {
     }
     
     @PutMapping("/cambiarPassword")
-    public ResponseEntity<?> cambiarPassword(@RequestParam("usuario") String Usuario,@RequestParam("password") String Password){
+    public ResponseEntity<?> cambiarPassword(@RequestBody UsuarioDTO Usuario){
         UsuarioDTO usuarioDTO = null;
-        usuarioDTO = usuarioService.cambiarPasswordUsuario(Usuario, Password);
+        usuarioDTO = usuarioService.cambiarPasswordUsuario(Usuario);
         if(usuarioDTO!=null){
             return ResponseEntity.ok(usuarioDTO);
         }

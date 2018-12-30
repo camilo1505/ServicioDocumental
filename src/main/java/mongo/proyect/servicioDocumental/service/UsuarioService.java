@@ -13,15 +13,15 @@ import mongo.proyect.servicioDocumental.dto.UsuarioDTO;
  */
 public interface UsuarioService {
     
-    UsuarioDTO buscarUsuario(String Usuario, String Password);
+    UsuarioDTO buscarUsuario(UsuarioDTO usuario);
     
-    String tipoUsuario(String Usuario);
+    String tipoUsuario(UsuarioDTO usuario);
     
-    UsuarioDTO crearUsuario(String Nombre, String Usuario, String Password, String tipoUsuario);
+    UsuarioDTO crearUsuario(UsuarioDTO usuario);
 
-    String cambiarTipoUsuario(String Usuario,String Password);
+    String cambiarTipoUsuario(UsuarioDTO usuario);
     
-    UsuarioDTO cambiarPasswordUsuario(String Usuario, String Password);
+    UsuarioDTO cambiarPasswordUsuario(UsuarioDTO usuario);
     
     
 }

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UsuarioRepository extends MongoRepository<Usuario, Long> {
     
-    @Query("{usuario:'?0'}, { unique: true }")
+    @Query("{usuario:'?0'},{ unique: true }")
     Optional<Usuario> findByUsuario( String Nombre);
     
 }
