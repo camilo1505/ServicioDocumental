@@ -1,0 +1,31 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package mongo.proyect.servicioDocumental.service;
+
+import com.mongodb.gridfs.GridFS;
+import java.io.File;
+import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
+
+/**
+ *
+ * @author junpa
+ */
+public interface DocumentoService {
+    
+    DocumentoDTO crearDocumento(DocumentoDTO documento);
+    
+    DocumentoDTO cambiarNombreDocumento(DocumentoDTO documento);
+    
+    DocumentoDTO eliminarDocumento(DocumentoDTO documento);
+    
+    DocumentoDTO guardarArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
+    
+    DocumentoDTO eliminarArchivo(DocumentoDTO documento,String archivo);
+    
+    DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
+    
+    
+}
