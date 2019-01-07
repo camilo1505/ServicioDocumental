@@ -5,8 +5,7 @@
  */
 package mongo.proyect.servicioDocumental.service;
 
-import com.mongodb.gridfs.GridFS;
-import java.io.File;
+import java.util.List;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 
 /**
@@ -27,5 +26,6 @@ public interface DocumentoService {
     
     DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
     
+    List<DocumentoDTO> consultarDocumento(String nombreDocumento, String autor, List<String> etiqueta);
     
 }

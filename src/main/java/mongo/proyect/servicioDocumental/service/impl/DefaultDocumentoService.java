@@ -10,12 +10,13 @@ import java.util.List;
 import java.util.Optional;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
+import mongo.proyect.servicioDocumental.dto.UsuarioDTO;
 import mongo.proyect.servicioDocumental.entity.Documento;
 import mongo.proyect.servicioDocumental.repository.DocumentoRepository;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
+import mongo.proyect.servicioDocumental.service.UsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,7 +30,7 @@ public class DefaultDocumentoService implements DocumentoService{
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    private GridFsOperations gridOperations;
+    private UsuarioService usuarioService;
     
     @Override
     public DocumentoDTO crearDocumento(DocumentoDTO documento) {
@@ -149,6 +150,34 @@ public class DefaultDocumentoService implements DocumentoService{
         }
         return null;
     }
-    
+
+    @Override
+    public List<DocumentoDTO> consultarDocumento(String nombreDocumento, String autor, List<String> etiquetas) {
+        List<Documento> auxiliar = new ArrayList<>();
+        List<Documento> documentos = new ArrayList<>();
+        UsuarioDTO autorDTO = usuarioService.buscarUsuarioNombre(autor);
+        if(!nombreDocumento.matches("")){
+            auxiliar = documentoRepository.findNombreDocumento(nombreDocumento);
+            if(!auxiliar.isEmpty()){
+                documentos.addAll(auxiliar);
+                auxiliar.clear();
+            }
+        }
+        if(!autor.matches("")){
+            auxiliar = documentoRepository.findAutor(autorDTO.getId());
+            if(!auxiliar.isEmpty()){
+                documentos.addAll(auxiliar);
+                auxiliar.clear();
+            }
+        }
+        if(!etiquetas.isEmpty()){
+           auxiliar = documentoRepository.findEtiqueta(etiquetas);
+           if(!auxiliar.isEmpty()){
+               documentos.addAll(auxiliar);
+               auxiliar.clear();
+           }
+        }
+        return null;
+    }
     
 }

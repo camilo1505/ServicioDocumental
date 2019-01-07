@@ -23,5 +23,6 @@ public interface UsuarioService {
     
     UsuarioDTO cambiarPasswordUsuario(UsuarioDTO usuario);
     
+    UsuarioDTO buscarUsuarioNombre(String nombreUsuario);
     
 }

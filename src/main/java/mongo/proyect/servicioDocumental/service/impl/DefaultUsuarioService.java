@@ -101,4 +101,18 @@ public class DefaultUsuarioService implements UsuarioService{
         }
         return null;
     }
+
+    @Override
+    public UsuarioDTO buscarUsuarioNombre(String nombreUsuario) {
+        Optional<Usuario> usuario = null;
+        if(!nombreUsuario.matches("")){
+            usuario = usuarioRepository.findByUsuario(nombreUsuario);
+            if(usuario.isPresent()){
+                return modelMapper.map(usuario, UsuarioDTO.class);
+            }
+        }
+        return null;
+    }
+    
+    
 }
