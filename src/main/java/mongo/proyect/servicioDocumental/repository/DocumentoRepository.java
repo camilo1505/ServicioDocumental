@@ -25,6 +25,6 @@ public interface DocumentoRepository extends MongoRepository<Documento, ObjectId
     @Query("{autor:'?0'}")
     List<Documento> findAutor(ObjectId Autor);
     
-    @Query("{etiquetas: { $in: ['?0'] }")
+    @Query("{etiquetas: { $in: [] } }")
     List<Documento> findEtiqueta(List<String> etiquetas);
 }
