@@ -27,6 +27,7 @@ public class DefaultUsuarioService implements UsuarioService{
     
     @Override
     public UsuarioDTO buscarUsuario(UsuarioDTO usuario) {
+        
         Optional<Usuario> usuarioOp = null;
         Usuario auxiliar = null;
         UsuarioDTO usuarioDTO = null;
@@ -42,6 +43,7 @@ public class DefaultUsuarioService implements UsuarioService{
 
     @Override
     public String tipoUsuario(UsuarioDTO usuario) {
+        
         Optional<Usuario> usuarioOp = null;
         UsuarioDTO usuarioDTO = null;
         Usuario auxiliar = null;
@@ -56,6 +58,7 @@ public class DefaultUsuarioService implements UsuarioService{
 
     @Override
     public UsuarioDTO crearUsuario(UsuarioDTO usuario) {
+        
         Optional<Usuario> usuarioOp = null;
         UsuarioDTO usuarioDTO = null;
         Usuario auxiliar = new Usuario();
@@ -73,6 +76,7 @@ public class DefaultUsuarioService implements UsuarioService{
 
     @Override
     public String cambiarTipoUsuario(UsuarioDTO usuario) {
+        
         Optional<Usuario> usuarioOp = null;
         UsuarioDTO usuarioDTO = null;
         Usuario auxiliar = null;
@@ -90,6 +94,7 @@ public class DefaultUsuarioService implements UsuarioService{
 
     @Override
     public UsuarioDTO cambiarPasswordUsuario(UsuarioDTO usuario) {
+        
         Optional<Usuario> usuarioOp = null;
         UsuarioDTO usuarioDTO = null;
         Usuario auxiliar = null;
@@ -104,15 +109,16 @@ public class DefaultUsuarioService implements UsuarioService{
 
     @Override
     public UsuarioDTO buscarUsuarioNombre(String nombreUsuario) {
+        
         Optional<Usuario> usuario = null;
         if(!nombreUsuario.matches("")){
             usuario = usuarioRepository.findByUsuario(nombreUsuario);
             if(usuario.isPresent()){
-                return modelMapper.map(usuario, UsuarioDTO.class);
+                
+                return modelMapper.map(usuario.get(), UsuarioDTO.class);
             }
         }
         return null;
     }
-    
     
 }

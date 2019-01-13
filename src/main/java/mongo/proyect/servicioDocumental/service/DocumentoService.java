@@ -16,7 +16,7 @@ public interface DocumentoService {
     
     DocumentoDTO crearDocumento(DocumentoDTO documento);
     
-    DocumentoDTO cambiarNombreDocumento(DocumentoDTO documento);
+    DocumentoDTO editarDocumento(DocumentoDTO documento);
     
     DocumentoDTO eliminarDocumento(DocumentoDTO documento);
     
@@ -28,4 +28,5 @@ public interface DocumentoService {
     
     List<DocumentoDTO> consultarDocumento(String nombreDocumento, String autor, List<String> etiqueta);
     
+    List<DocumentoDTO> mostrarDocumentos();
 }

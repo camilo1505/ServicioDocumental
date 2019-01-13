@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license header, choose License Headers in Project Properties. 
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -11,6 +11,7 @@ import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author junpa
  */
+
+@CrossOrigin(origins = "http://localhost:8082")
 @RestController
 @RequestMapping("api/v1/documento")
 public class DocumentoController {
@@ -31,35 +34,37 @@ public class DocumentoController {
     private DocumentoService documentoService;
     
     @PostMapping("/crearDocumento")
-    public ResponseEntity<?> crearDocumento(@RequestBody DocumentoDTO documento){
-        //DocumentoDTO crearDocumento(DocumentoDTO documento);
+    public ResponseEntity<?> crearDocumento(
+            @RequestBody DocumentoDTO documento){
+        
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!= null){
             documentoDTO = documentoService.crearDocumento(documento);
-            if(documentoDTO!=null){
-                return ResponseEntity.ok().build();
-            }
-        }
-        return ResponseEntity.badRequest().build();
-    }
-    
-    @PutMapping("/cambiarNombreDocumento")
-    public ResponseEntity<?> cambiarNombreDocumento(@RequestBody DocumentoDTO documento){
-        //DocumentoDTO cambiarNombreDocumento(DocumentoDTO documento);
-        DocumentoDTO documentoDTO = new DocumentoDTO();
-        if(documento!=null){
-            documentoDTO = documentoService.cambiarNombreDocumento(documento);
             if(documentoDTO!=null){
                 return ResponseEntity.ok(documentoDTO);
             }
         }
         return ResponseEntity.badRequest().build();
-
+    }
+    
+    @PutMapping("/editarDocumento")
+    public ResponseEntity<?> editarDocumento(
+            @RequestBody DocumentoDTO documento){
+        
+        DocumentoDTO documentoDTO = new DocumentoDTO();
+        if(documento!=null){
+            documentoDTO = documentoService.editarDocumento(documento);
+            if(documentoDTO!=null){
+                return ResponseEntity.ok(documentoDTO);
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
     
     @DeleteMapping("/eliminarDocumento")
-    public ResponseEntity<?> eliminarDocumento(@RequestBody DocumentoDTO documento){
-        //DocumentoDTO eliminarDocumento(DocumentoDTO documento);
+    public ResponseEntity<?> eliminarDocumento(
+            @RequestBody DocumentoDTO documento){
+        
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null){
             documentoDTO = documentoService.eliminarDocumento(documento);
@@ -71,8 +76,11 @@ public class DocumentoController {
     }
     
     @PostMapping("/guardarArchivo")
-    public ResponseEntity<?> guardarArchivo(@RequestBody DocumentoDTO documento,@RequestParam("archivo")String archivo,@RequestParam("nombreArchivo") String nombreArchivo){
-        //DocumentoDTO guardarArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
+    public ResponseEntity<?> guardarArchivo(
+            @RequestBody DocumentoDTO documento,
+            @RequestParam("archivo")String archivo,
+            @RequestParam("nombreArchivo") String nombreArchivo){
+        
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null && !archivo.matches("") && !nombreArchivo.matches("")){
             documentoDTO = documentoService.guardarArchivo(documento, archivo, nombreArchivo);
@@ -84,8 +92,10 @@ public class DocumentoController {
     }
     
     @DeleteMapping("/eliminarArchivo")
-    public ResponseEntity<?> eliminarArchivo(@RequestBody DocumentoDTO documento,@RequestParam("archivo") String archivo){
-        //DocumentoDTO eliminarArchivo(DocumentoDTO documento,String archivo);
+    public ResponseEntity<?> eliminarArchivo(
+            @RequestBody DocumentoDTO documento,
+            @RequestParam("archivo") String archivo){
+        
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null && !archivo.matches("")){
             documentoDTO = documentoService.eliminarArchivo(documento, archivo);
@@ -97,8 +107,11 @@ public class DocumentoController {
     }
     
     @PutMapping("/cambiarNombreArchivo")
-    public ResponseEntity<?> cambiarNombreArchivo(@RequestBody DocumentoDTO documento,@RequestParam("archivo") String archivo,@RequestParam("nombreArchivo") String nombreArchivo){
-        //DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
+    public ResponseEntity<?> cambiarNombreArchivo(
+            @RequestBody DocumentoDTO documento,
+            @RequestParam("archivo") String archivo,
+            @RequestParam("nombreArchivo") String nombreArchivo){
+
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null && !archivo.matches("") && !nombreArchivo.matches("")){
             documentoDTO = documentoService.cambiarNombreArchivo(documento, archivo, nombreArchivo);
@@ -110,15 +123,29 @@ public class DocumentoController {
     }
     
     @GetMapping("/consultarDocumento")
-    public ResponseEntity<?> consultarDocumeto(@RequestParam("nombreDocumento") String nombreDocumento,@RequestParam("autor") String autor, @RequestBody List<String> etiqueta){
-    //List<DocumentoDTO> consultarDocumeto(String nombreDocumento, String autor, List<String> etiqueta);
+    public ResponseEntity<?> consultarDocumeto(
+            @RequestParam("nombreDocumento") String nombreDocumento,
+            @RequestParam("autor") String autor, 
+            @RequestParam("etiquetas")String etiquetas){
+        
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        if(!nombreDocumento.matches("") || !autor.matches("") || etiqueta.isEmpty()){
+        String[] etiquetaSplit = etiquetas.split("-");
+        List<String> etiqueta = new ArrayList<>();
+        for(String eti:etiquetaSplit){
+            etiqueta.add(eti);
+        }
+        if(!nombreDocumento.matches("") || !autor.matches("") || !etiqueta.isEmpty()){
             documentosDTO = documentoService.consultarDocumento(nombreDocumento, autor, etiqueta);
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }
         }
+        else{
+            documentosDTO = documentoService.mostrarDocumentos();
+            if(documentosDTO!=null){
+                return ResponseEntity.ok(documentosDTO);
+            }
+        }        
         return ResponseEntity.badRequest().build();
     }
 
