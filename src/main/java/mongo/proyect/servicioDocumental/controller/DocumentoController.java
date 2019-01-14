@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author junpa
  */
 
-@CrossOrigin(origins = "http://localhost:8082")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("api/v1/documento")
 public class DocumentoController {
@@ -133,8 +133,11 @@ public class DocumentoController {
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         String[] etiquetaSplit = etiquetas.split(",");
         List<String> etiqueta = new ArrayList<>();
-        for(String eti:etiquetaSplit){
-            etiqueta.add(eti);
+        
+        if(!etiquetas.matches("")){
+            for(String eti:etiquetaSplit){
+                etiqueta.add(eti);
+            }
         }
         if(!nombreDocumento.matches("") || !autor.matches("") || !etiqueta.isEmpty()){
             documentosDTO = documentoService.consultarDocumento(nombreDocumento, autor, etiqueta);
