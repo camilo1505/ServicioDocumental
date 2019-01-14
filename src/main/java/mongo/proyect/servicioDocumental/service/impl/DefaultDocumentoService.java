@@ -191,20 +191,14 @@ public class DefaultDocumentoService implements DocumentoService{
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         UsuarioDTO autorDTO = new UsuarioDTO();
         autorDTO = usuarioService.buscarUsuarioNombre(autor);
-        System.out.println("consulte el autor: " + autor);
         if(!nombreDocumento.matches("")){
             auxiliar = documentoRepository.findNombreDocumento(nombreDocumento);
             if(!auxiliar.isEmpty()){
                 documentos.addAll(auxiliar);
                 auxiliar.clear();
-                System.out.println("encontre documentos con ese nombre");
             }
-            
         }
         if(autorDTO!=null){
-            System.out.println("voy a buscar sus documentos");
-            System.out.println("el autor es:" + autorDTO.getNombre());
-            System.out.println("el usuario del autor es: "+ autorDTO.getUsuario());
             auxiliar = documentoRepository.findAutor(autorDTO.getUsuario());
             if(!auxiliar.isEmpty()){
                 System.out.println("voy a añadir");
@@ -243,6 +237,27 @@ public class DefaultDocumentoService implements DocumentoService{
         }
         return null;
     }
+
+    @Override
+    public List<DocumentoDTO> misDocumentos(String autor) {
+        List<Documento> documentos = new ArrayList<>();
+        List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        UsuarioDTO autorDTO = new UsuarioDTO();
+        autorDTO = usuarioService.buscarUsuarioNombre(autor);
+        if(autorDTO!=null){
+            documentos = documentoRepository.findAutorMisDocumentos(autorDTO.getUsuario());
+            if(!documentos.isEmpty())
+            {
+                for(Documento documento: documentos){
+                    documentosDTO.add(modelMapper.map(documento, DocumentoDTO.class));
+                }
+                return documentosDTO;
+            }
+        }
+        
+        return null;
+    }
+    
     
     
 }

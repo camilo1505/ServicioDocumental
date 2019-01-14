@@ -29,4 +29,6 @@ public interface DocumentoService {
     List<DocumentoDTO> consultarDocumento(String nombreDocumento, String autor, List<String> etiqueta);
     
     List<DocumentoDTO> mostrarDocumentos();
+    
+    List<DocumentoDTO> misDocumentos(String autor);
 }

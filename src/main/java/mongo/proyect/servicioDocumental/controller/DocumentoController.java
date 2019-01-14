@@ -8,7 +8,9 @@ package mongo.proyect.servicioDocumental.controller;
 import java.util.ArrayList;
 import java.util.List;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
+import mongo.proyect.servicioDocumental.dto.UsuarioDTO;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
+import mongo.proyect.servicioDocumental.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -129,7 +131,7 @@ public class DocumentoController {
             @RequestParam("etiquetas")String etiquetas){
         
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        String[] etiquetaSplit = etiquetas.split("-");
+        String[] etiquetaSplit = etiquetas.split(",");
         List<String> etiqueta = new ArrayList<>();
         for(String eti:etiquetaSplit){
             etiqueta.add(eti);
@@ -146,6 +148,20 @@ public class DocumentoController {
                 return ResponseEntity.ok(documentosDTO);
             }
         }        
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/misDocumentos")
+    public ResponseEntity<?> misDocumentos(
+            @RequestParam("autor") String autor ){        
+        List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        List<String> etiqueta = new ArrayList<>();
+        if(!autor.matches("")){
+            documentosDTO = documentoService.misDocumentos( autor);
+            if(documentosDTO !=null){
+                return ResponseEntity.ok(documentosDTO);
+            }
+        }
         return ResponseEntity.badRequest().build();
     }
 
