@@ -36,8 +36,8 @@ public class FileSystemStorageService {
 		}
 	}
 	
-	public void store(MultipartFile file) {
-		String filename = StringUtils.cleanPath(file.getOriginalFilename());
+	public void store(MultipartFile file, String autor) {
+		String filename = StringUtils.cleanPath(autor+"/"+file.getOriginalFilename());
 		try {
 			if (file.isEmpty()) {
 				throw new RuntimeException("Failed to store empty file " + filename);

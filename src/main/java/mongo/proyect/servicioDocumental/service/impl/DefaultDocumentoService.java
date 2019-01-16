@@ -113,7 +113,7 @@ public class DefaultDocumentoService implements DocumentoService{
         ArchivoDTO file = new ArchivoDTO();
         boolean bandera = false;
         if(documento!=null && !archivo.isEmpty()){
-            documentoDTO = documentoRepository.findNombreDocumentoAutor(documento.getNombre(), documento.getAutor());
+            documentoDTO = documentoRepository.nombreAutor(documento.getNombre(), documento.getAutor());
             if(documentoDTO.isPresent()){
                 documentoDTO = documentoRepository.findById(documentoDTO.get().getId());
                 if(documentoDTO.isPresent()){
@@ -129,7 +129,7 @@ public class DefaultDocumentoService implements DocumentoService{
                         file.setArchivo(archivo.getOriginalFilename());
                         archivos.add(file);
                         auxiliar.setArchivo(archivos);
-                        storageService.store(archivo);
+                        storageService.store(archivo,documento.getAutor());
                         auxiliar = documentoRepository.save(auxiliar);
                         return modelMapper.map(auxiliar, DocumentoDTO.class);
                     }
