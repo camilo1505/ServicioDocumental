@@ -6,6 +6,7 @@
 package mongo.proyect.servicioDocumental.dto;
 
 import org.bson.types.ObjectId;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -14,8 +15,15 @@ import org.bson.types.ObjectId;
 public class ArchivoDTO {
     private ObjectId id;
     private String nombreArchivo;
-    private String url;
-    private String type;
+    private String archivo;
+
+    public String getArchivo() {
+        return archivo;
+    }
+
+    public void setArchivo(String archivo) {
+        this.archivo = archivo;
+    }
 
     public ObjectId getId() {
         return id;
@@ -33,21 +41,6 @@ public class ArchivoDTO {
         this.nombreArchivo = nombreArchivo;
     }
 
-    public String getUrl() {
-        return url;
-    }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-    
     
 }

@@ -6,6 +6,8 @@
 package mongo.proyect.servicioDocumental;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,5 +21,5 @@ public class Configuracion {
     public ModelMapper getModelMapper(){
         return new ModelMapper();
     }
-
+    
 }

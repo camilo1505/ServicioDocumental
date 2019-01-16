@@ -7,6 +7,7 @@ package mongo.proyect.servicioDocumental.service;
 
 import java.util.List;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -20,7 +21,7 @@ public interface DocumentoService {
     
     DocumentoDTO eliminarDocumento(DocumentoDTO documento);
     
-    DocumentoDTO guardarArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
+    DocumentoDTO guardarArchivo(DocumentoDTO documento, MultipartFile file);
     
     DocumentoDTO eliminarArchivo(DocumentoDTO documento,String archivo);
     

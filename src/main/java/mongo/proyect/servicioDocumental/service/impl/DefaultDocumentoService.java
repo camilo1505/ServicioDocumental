@@ -15,9 +15,12 @@ import mongo.proyect.servicioDocumental.entity.Documento;
 import mongo.proyect.servicioDocumental.repository.DocumentoRepository;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
 import mongo.proyect.servicioDocumental.service.UsuarioService;
+import mongo.proyect.servicioDocumental.storage.FileSystemStorageService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
  *
@@ -31,18 +34,19 @@ public class DefaultDocumentoService implements DocumentoService{
     private ModelMapper modelMapper;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private FileSystemStorageService storageService;
     
     @Override
     public DocumentoDTO crearDocumento(DocumentoDTO documento) {
-        
         Documento documentoDTO = new Documento();
         Optional<Documento> revisar = null;
-        ArchivoDTO archivo = new ArchivoDTO();
-        archivo.setNombreArchivo("readme.txt");
-        archivo.setType("txt");
-        archivo.setUrl("//");
+        MultipartFile archivo = null;
+        ArchivoDTO archivoDTO = new ArchivoDTO();
+        archivoDTO.setNombreArchivo("init");
+        archivoDTO.setArchivo("init");
         List<ArchivoDTO> archivos = new ArrayList<>();
-        archivos.add(archivo);
+        archivos.add(archivoDTO);
         if(documento!=null){
             revisar = documentoRepository.findNombreDocumentoAutor(documento.getNombre(), documento.getAutor());
             if(!revisar.isPresent()){
@@ -102,33 +106,33 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public DocumentoDTO guardarArchivo(DocumentoDTO documento, String archivo, String nombreArchivo) {
-        
+    public DocumentoDTO guardarArchivo(DocumentoDTO documento, MultipartFile archivo) {
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         List<ArchivoDTO> archivos = new ArrayList<>();
         ArchivoDTO file = new ArchivoDTO();
-        file.setNombreArchivo(nombreArchivo);
-        file.setUrl(archivo);
-        String[] parts = archivo.split("\\.");
-        String type = parts[1];
-        file.setType(type);
         boolean bandera = false;
-        if(documento!=null && !archivo.matches("") && !nombreArchivo.matches("")){
-            documentoDTO = documentoRepository.findById(documento.getId());
+        if(documento!=null && !archivo.isEmpty()){
+            documentoDTO = documentoRepository.findNombreDocumentoAutor(documento.getNombre(), documento.getAutor());
             if(documentoDTO.isPresent()){
-                auxiliar = documentoDTO.get();
-                archivos = auxiliar.getArchivo();
-                for(ArchivoDTO fil:archivos){
-                    if(fil.getNombreArchivo().matches(nombreArchivo)){
-                        bandera = true;
+                documentoDTO = documentoRepository.findById(documentoDTO.get().getId());
+                if(documentoDTO.isPresent()){
+                    auxiliar = documentoDTO.get();
+                    archivos = auxiliar.getArchivo();
+                    for(ArchivoDTO fil:archivos){
+                        if(fil.getNombreArchivo().matches(archivo.getOriginalFilename())){
+                            bandera = true;
+                        }
                     }
-                }
-                if(!bandera){
-                    archivos.add(file);
-                    auxiliar.setArchivo(archivos);
-                    auxiliar = documentoRepository.save(auxiliar);
-                    return modelMapper.map(auxiliar, DocumentoDTO.class);
+                    if(!bandera){
+                        file.setNombreArchivo(archivo.getOriginalFilename());
+                        file.setArchivo(archivo.getOriginalFilename());
+                        archivos.add(file);
+                        auxiliar.setArchivo(archivos);
+                        storageService.store(archivo);
+                        auxiliar = documentoRepository.save(auxiliar);
+                        return modelMapper.map(auxiliar, DocumentoDTO.class);
+                    }
                 }
             }
         }
@@ -140,18 +144,20 @@ public class DefaultDocumentoService implements DocumentoService{
         
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
+        List<ArchivoDTO> auxiliarArchivos = new ArrayList<>();
+        auxiliarArchivos = null;
         List<ArchivoDTO> archivos = new ArrayList<>();
-        if(documento!=null && archivo!=""){
-            documentoDTO = documentoRepository.findById(documento.getId());
+        if(documento!=null && !archivo.matches("")){
+            documentoDTO = documentoRepository.findNombreDocumentoAutor(documento.getNombre(),documento.getAutor());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
-                archivos = auxiliar.getArchivo();
+                archivos = null;
                 for(ArchivoDTO arc:archivos){
-                    if(arc.getUrl() == archivo){
-                        archivos.remove(arc);
-                    }
+                    if(!arc.getNombreArchivo().matches(archivo)){
+                        auxiliarArchivos.add(arc);
+                    }   
                 }
-                auxiliar.setArchivo(archivos);
+                auxiliar.setArchivo(auxiliarArchivos);
                 auxiliar = documentoRepository.save(auxiliar);
                 return modelMapper.map(auxiliar, DocumentoDTO.class);
             }
@@ -171,7 +177,7 @@ public class DefaultDocumentoService implements DocumentoService{
                 auxiliar = documentoDTO.get();
                 archivos = auxiliar.getArchivo();
                 for(ArchivoDTO arc:archivos){
-                    if(arc.getUrl() == archivo){
+                    if(arc.getNombreArchivo().matches(archivo)){
                         arc.setNombreArchivo(nombreArchivo);
                     }
                 }

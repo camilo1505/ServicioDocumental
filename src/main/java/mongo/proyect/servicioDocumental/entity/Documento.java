@@ -5,13 +5,12 @@
  */
 package mongo.proyect.servicioDocumental.entity;
 
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSFile;
 import java.util.List;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *

@@ -8,13 +8,10 @@ package mongo.proyect.servicioDocumental.controller;
 import java.util.ArrayList;
 import java.util.List;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
-import mongo.proyect.servicioDocumental.dto.UsuarioDTO;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
-import mongo.proyect.servicioDocumental.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -63,10 +61,11 @@ public class DocumentoController {
         return ResponseEntity.badRequest().build();
     }
     
-    @DeleteMapping("/eliminarDocumento")
+    @PostMapping("/eliminarDocumento")
     public ResponseEntity<?> eliminarDocumento(
             @RequestBody DocumentoDTO documento){
         
+        System.out.println("el documento a eliminar es: " + documento.getNombre());
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null){
             documentoDTO = documentoService.eliminarDocumento(documento);
@@ -79,13 +78,17 @@ public class DocumentoController {
     
     @PostMapping("/guardarArchivo")
     public ResponseEntity<?> guardarArchivo(
-            @RequestBody DocumentoDTO documento,
-            @RequestParam("archivo")String archivo,
-            @RequestParam("nombreArchivo") String nombreArchivo){
+            @RequestParam("nombreArchivo") String nombreArchivo,
+            @RequestParam("autor")String autor,
+            @RequestParam("file") final MultipartFile file){
         
+        DocumentoDTO documento = new DocumentoDTO();
+        documento.setNombre(nombreArchivo);
+        documento.setAutor(autor);
+        System.out.println("entre a guardar los archivos");
         DocumentoDTO documentoDTO = new DocumentoDTO();
-        if(documento!=null && !archivo.matches("") && !nombreArchivo.matches("")){
-            documentoDTO = documentoService.guardarArchivo(documento, archivo, nombreArchivo);
+        if(documento!=null && file!=null){
+            documentoDTO = documentoService.guardarArchivo(documento,file);
             if(documentoDTO !=null){
                 return ResponseEntity.ok(documentoDTO);
             }
@@ -93,13 +96,15 @@ public class DocumentoController {
         return ResponseEntity.badRequest().build();
     }
     
-    @DeleteMapping("/eliminarArchivo")
+    @PostMapping("/eliminarArchivo")
     public ResponseEntity<?> eliminarArchivo(
             @RequestBody DocumentoDTO documento,
             @RequestParam("archivo") String archivo){
         
         DocumentoDTO documentoDTO = new DocumentoDTO();
+        System.out.println("voy a eliminar el archivo");
         if(documento!=null && !archivo.matches("")){
+            System.out.println("el nombre del documento es: " + documento.getNombre());
             documentoDTO = documentoService.eliminarArchivo(documento, archivo);
             if(documentoDTO !=null){
                 return ResponseEntity.ok(documentoDTO);
