@@ -16,6 +16,8 @@ public class ArchivoDTO {
     private ObjectId id;
     private String nombreArchivo;
     private String archivo;
+    private String URL;
+    
 
     public String getArchivo() {
         return archivo;
@@ -39,6 +41,14 @@ public class ArchivoDTO {
 
     public void setNombreArchivo(String nombreArchivo) {
         this.nombreArchivo = nombreArchivo;
+    }
+
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
     }
 
 

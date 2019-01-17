@@ -7,6 +7,7 @@ package mongo.proyect.servicioDocumental.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.annotation.MultipartConfig;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class DocumentoController {
     public ResponseEntity<?> guardarArchivo(
             @RequestParam("nombreArchivo") String nombreArchivo,
             @RequestParam("autor")String autor,
-            @RequestParam("file") final MultipartFile file){
+            @RequestParam("file") MultipartFile file){
         
         DocumentoDTO documento = new DocumentoDTO();
         documento.setNombre(nombreArchivo);

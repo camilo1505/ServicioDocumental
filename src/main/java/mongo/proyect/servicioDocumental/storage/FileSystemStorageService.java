@@ -1,8 +1,10 @@
 
 package mongo.proyect.servicioDocumental.storage;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -36,8 +38,9 @@ public class FileSystemStorageService {
 		}
 	}
 	
-	public void store(MultipartFile file, String autor) {
-		String filename = StringUtils.cleanPath(autor+"/"+file.getOriginalFilename());
+	public void store(MultipartFile file, String autor,String documento) {
+            crearArchivo(autor, documento);
+		String filename = StringUtils.cleanPath(autor+"/"+documento+"/"+file.getOriginalFilename());
 		try {
 			if (file.isEmpty()) {
 				throw new RuntimeException("Failed to store empty file " + filename);
@@ -85,4 +88,13 @@ public class FileSystemStorageService {
 	public Path getUploadLocation() {
 		return uploadLocation;
 	}
+        
+        public void crearArchivo(String autor,String documento){
+             try {
+                    File directorio = new File("C:\\java-exec\\upload-dir\\"+autor+"\\"+documento);
+                    directorio.mkdirs();
+                
+            } catch(Exception e) {}
+        }
+        
 }

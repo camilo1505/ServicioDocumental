@@ -48,7 +48,7 @@ public class DefaultDocumentoService implements DocumentoService{
         List<ArchivoDTO> archivos = new ArrayList<>();
         archivos.add(archivoDTO);
         if(documento!=null){
-            revisar = documentoRepository.findNombreDocumentoAutor(documento.getNombre(), documento.getAutor());
+            revisar = documentoRepository.nombreAutor(documento.getNombre(), documento.getAutor());
             if(!revisar.isPresent()){
                 documentoDTO.setNombre(documento.getNombre());
                 documentoDTO.setEtiquetas(documento.getEtiquetas());
@@ -72,7 +72,7 @@ public class DefaultDocumentoService implements DocumentoService{
         Documento auxiliar = new Documento();
          Optional<Documento> revisar = null;
         if(documento!=null){
-            revisar = documentoRepository.findNombreDocumentoAutor(documento.getNombre(), documento.getAutor());
+            revisar = documentoRepository.nombreAutor(documento.getNombre(), documento.getAutor());
             if(!revisar.isPresent()){
                 documentoDTO = documentoRepository.findById(documento.getId());
                 if(documentoDTO.isPresent()){
@@ -129,7 +129,7 @@ public class DefaultDocumentoService implements DocumentoService{
                         file.setArchivo(archivo.getOriginalFilename());
                         archivos.add(file);
                         auxiliar.setArchivo(archivos);
-                        storageService.store(archivo,documento.getAutor());
+                        storageService.store(archivo,documento.getAutor(),documento.getNombre());
                         auxiliar = documentoRepository.save(auxiliar);
                         return modelMapper.map(auxiliar, DocumentoDTO.class);
                     }
@@ -171,7 +171,7 @@ public class DefaultDocumentoService implements DocumentoService{
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         List<ArchivoDTO> archivos = new ArrayList<>();
-        if(documento!=null && archivo!=""){
+        if(documento!=null && archivo.matches("")){
             documentoDTO = documentoRepository.findById(documento.getId());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
