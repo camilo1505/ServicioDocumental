@@ -125,6 +125,7 @@ public class DefaultDocumentoService implements DocumentoService{
                         }
                     }
                     if(!bandera){
+                        file.setURL("C:\\java-exec\\upload-dir\\"+documento.getAutor()+"\\"+documento.getNombre()+"\\"+archivo.getOriginalFilename());
                         file.setNombreArchivo(archivo.getOriginalFilename());
                         file.setArchivo(archivo.getOriginalFilename());
                         archivos.add(file);
