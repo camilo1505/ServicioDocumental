@@ -198,6 +198,9 @@ public class DefaultDocumentoService implements DocumentoService{
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         UsuarioDTO autorDTO = new UsuarioDTO();
         autorDTO = usuarioService.buscarUsuarioNombre(autor);
+        if(autorDTO.getTipoUsuario().matches("administrador")){
+            return mostrarDocumentos();
+        }
         if(!nombreDocumento.matches("")){
             auxiliar = documentoRepository.findNombreDocumento(nombreDocumento);
             if(!auxiliar.isEmpty()){
