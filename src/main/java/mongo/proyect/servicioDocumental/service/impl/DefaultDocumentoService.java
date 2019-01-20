@@ -41,12 +41,6 @@ public class DefaultDocumentoService implements DocumentoService{
         Documento documentoDTO = new Documento();
         Optional<Documento> revisar = null;
         UsuarioDTO propietario = null;
-        MultipartFile archivo = null;
-        ArchivoDTO archivoDTO = new ArchivoDTO();
-        archivoDTO.setNombreArchivo("init");
-        archivoDTO.setArchivo("init");
-        List<ArchivoDTO> archivos = new ArrayList<>();
-        archivos.add(archivoDTO);
         propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
         if(propietario!= null){
             if(documento!=null){
@@ -56,7 +50,7 @@ public class DefaultDocumentoService implements DocumentoService{
                     documentoDTO.setEtiquetas(documento.getEtiquetas());
                     documentoDTO.setDescripcion(documento.getDescripcion());
                     documentoDTO.setEstado(documento.getEstado());
-                    documentoDTO.setArchivo(archivos);
+                    documentoDTO.setArchivo(documento.getArchivo());
                     documentoDTO.setUsuario(documento.getUsuario());
                     documentoDTO = documentoRepository.save(documentoDTO);
                     return modelMapper.map(documentoDTO, DocumentoDTO.class);
