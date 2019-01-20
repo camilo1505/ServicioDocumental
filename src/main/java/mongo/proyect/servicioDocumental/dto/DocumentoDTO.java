@@ -18,7 +18,7 @@ public class DocumentoDTO {
     private String nombre;
     private List<String> etiquetas;
     private String descripcion;
-    private String estado;
+    private boolean estado;
     private List<ArchivoDTO> archivo;
     
     private String autor;
@@ -55,11 +55,11 @@ public class DocumentoDTO {
         this.descripcion = descripcion;
     }
 
-    public String getEstado() {
+    public boolean getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(boolean estado) {
         this.estado = estado;
     }
 

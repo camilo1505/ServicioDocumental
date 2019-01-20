@@ -27,7 +27,7 @@ public interface DocumentoService {
     
     DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
     
-    List<DocumentoDTO> consultarDocumento(String nombreDocumento, String autor, List<String> etiqueta);
+    List<DocumentoDTO> consultarDocumento(String consulta);
     
     List<DocumentoDTO> mostrarDocumentos();
     

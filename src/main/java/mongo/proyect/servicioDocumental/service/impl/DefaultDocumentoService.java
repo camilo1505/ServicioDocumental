@@ -191,18 +191,23 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public List<DocumentoDTO> consultarDocumento(String nombreDocumento, String autor, List<String> etiquetas) {
+    public List<DocumentoDTO> consultarDocumento(String consulta) {
         
         List<Documento> auxiliar = new ArrayList<>();
         List<Documento> documentos = new ArrayList<>();
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        List<String> consultaList = new ArrayList<>();
+        String[] consultaSplit = consulta.split(" ");
+        for(String eti:consultaSplit){
+            consultaList.add(eti);
+        }
         UsuarioDTO autorDTO = new UsuarioDTO();
-        autorDTO = usuarioService.buscarUsuarioNombre(autor);
-        if(autorDTO.getTipoUsuario().matches("administrador")){
+        autorDTO = usuarioService.buscarUsuarioNombre(consulta);
+        if(autorDTO.getTipoUsuario()){
             return mostrarDocumentos();
         }
-        if(!nombreDocumento.matches("")){
-            auxiliar = documentoRepository.findNombreDocumento(nombreDocumento);
+        if(!consulta.matches("")){
+            auxiliar = documentoRepository.findNombreDocumento(consulta);
             if(!auxiliar.isEmpty()){
                 documentos.addAll(auxiliar);
                 auxiliar.clear();
@@ -211,13 +216,12 @@ public class DefaultDocumentoService implements DocumentoService{
         if(autorDTO!=null){
             auxiliar = documentoRepository.findAutor(autorDTO.getUsuario());
             if(!auxiliar.isEmpty()){
-                System.out.println("voy a añadir");
                 documentos.addAll(auxiliar);
                 auxiliar.clear();
             }
         }
-        if(!etiquetas.isEmpty()){
-           auxiliar = documentoRepository.findEtiqueta(etiquetas);
+        if(!consulta.isEmpty()){
+           auxiliar = documentoRepository.findEtiqueta(consultaList);
            if(!auxiliar.isEmpty()){
                documentos.addAll(auxiliar);
                auxiliar.clear();

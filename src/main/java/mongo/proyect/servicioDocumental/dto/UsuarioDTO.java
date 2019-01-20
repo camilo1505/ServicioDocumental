@@ -17,7 +17,7 @@ public class UsuarioDTO {
     private String nombre;
     private String usuario;
     private String password;
-    private String tipoUsuario;
+    private boolean tipoUsuario;
 
     public ObjectId getId() {
         return id;
@@ -51,11 +51,11 @@ public class UsuarioDTO {
         this.password = password;
     }
 
-    public String getTipoUsuario() {
+    public boolean getTipoUsuario() {
         return tipoUsuario;
     }
 
-    public void setTipoUsuario(String tipoUsuario) {
+    public void setTipoUsuario(boolean tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
     

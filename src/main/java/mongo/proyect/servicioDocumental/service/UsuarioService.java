@@ -15,11 +15,11 @@ public interface UsuarioService {
     
     UsuarioDTO buscarUsuario(UsuarioDTO usuario);
     
-    String tipoUsuario(UsuarioDTO usuario);
+    boolean tipoUsuario(UsuarioDTO usuario);
     
     UsuarioDTO crearUsuario(UsuarioDTO usuario);
 
-    String cambiarTipoUsuario(UsuarioDTO usuario);
+    boolean cambiarTipoUsuario(UsuarioDTO usuario);
     
     UsuarioDTO cambiarPasswordUsuario(UsuarioDTO usuario);
     

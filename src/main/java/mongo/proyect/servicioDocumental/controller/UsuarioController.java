@@ -52,7 +52,7 @@ public class UsuarioController {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setUsuario(Usuario);
         usuarioDTO.setPassword(password);
-        String usuarioString = null;
+        boolean usuarioString = false;
         usuarioString = usuarioService.tipoUsuario(usuarioDTO);
         if(usuarioDTO!=null){
             return ResponseEntity.ok(usuarioString);
@@ -72,9 +72,9 @@ public class UsuarioController {
     
     @PutMapping("/cambiarTipoUsuario")
     public ResponseEntity<?> cambiarTipoUsuario(@RequestBody UsuarioDTO Usuario){
-        String usuarioDTO = null;
+        boolean usuarioDTO = false;
         usuarioDTO = usuarioService.cambiarTipoUsuario(Usuario);
-        if(usuarioDTO!=null){
+        if(usuarioDTO){
             return ResponseEntity.ok(usuarioDTO);
         }
         return ResponseEntity.badRequest().build();

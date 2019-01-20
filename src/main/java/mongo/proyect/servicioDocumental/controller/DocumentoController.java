@@ -132,21 +132,11 @@ public class DocumentoController {
     
     @GetMapping("/consultarDocumento")
     public ResponseEntity<?> consultarDocumeto(
-            @RequestParam("nombreDocumento") String nombreDocumento,
-            @RequestParam("autor") String autor, 
-            @RequestParam("etiquetas")String etiquetas){
+            @RequestParam("consulta") String consulta){
         
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        String[] etiquetaSplit = etiquetas.split(",");
-        List<String> etiqueta = new ArrayList<>();
-        
-        if(!etiquetas.matches("")){
-            for(String eti:etiquetaSplit){
-                etiqueta.add(eti);
-            }
-        }
-        if(!nombreDocumento.matches("") || !autor.matches("") || !etiqueta.isEmpty()){
-            documentosDTO = documentoService.consultarDocumento(nombreDocumento, autor, etiqueta);
+        if(!consulta.matches("")){
+            documentosDTO = documentoService.consultarDocumento(consulta);
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }

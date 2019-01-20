@@ -42,7 +42,7 @@ public class DefaultUsuarioService implements UsuarioService{
     }
 
     @Override
-    public String tipoUsuario(UsuarioDTO usuario) {
+    public boolean tipoUsuario(UsuarioDTO usuario) {
         
         Optional<Usuario> usuarioOp = null;
         UsuarioDTO usuarioDTO = null;
@@ -53,7 +53,7 @@ public class DefaultUsuarioService implements UsuarioService{
             usuarioDTO = modelMapper.map(auxiliar,UsuarioDTO.class);
             return usuarioDTO.getTipoUsuario();
         }
-        return null;
+        return false;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class DefaultUsuarioService implements UsuarioService{
     }
 
     @Override
-    public String cambiarTipoUsuario(UsuarioDTO usuario) {
+    public boolean cambiarTipoUsuario(UsuarioDTO usuario) {
         
         Optional<Usuario> usuarioOp = null;
         UsuarioDTO usuarioDTO = null;
@@ -84,12 +84,12 @@ public class DefaultUsuarioService implements UsuarioService{
         if(usuarioOp.isPresent()){
            auxiliar = usuarioOp.get();
            if(auxiliar.getPassword().matches(usuario.getPassword())){
-                auxiliar.setTipoUsuario("inactivo");
+                auxiliar.setTipoUsuario(true);
                 auxiliar = usuarioRepository.save(auxiliar);
-                return "inactivo";
+                return true;
            }
         }
-        return "no se pudo";
+        return false;
     }
 
     @Override
