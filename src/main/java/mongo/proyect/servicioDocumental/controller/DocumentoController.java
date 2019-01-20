@@ -85,7 +85,7 @@ public class DocumentoController {
         
         DocumentoDTO documento = new DocumentoDTO();
         documento.setNombre(nombreArchivo);
-        documento.setAutor(autor);
+        documento.setUsuario(autor);
         System.out.println("entre a guardar los archivos");
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null && file!=null){
@@ -154,7 +154,6 @@ public class DocumentoController {
     public ResponseEntity<?> misDocumentos(
             @RequestParam("autor") String autor ){        
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        List<String> etiqueta = new ArrayList<>();
         if(!autor.matches("")){
             documentosDTO = documentoService.misDocumentos( autor);
             if(documentosDTO !=null){

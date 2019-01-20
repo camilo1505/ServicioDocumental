@@ -20,7 +20,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
  *
@@ -41,26 +40,28 @@ public class DefaultDocumentoService implements DocumentoService{
     public DocumentoDTO crearDocumento(DocumentoDTO documento) {
         Documento documentoDTO = new Documento();
         Optional<Documento> revisar = null;
+        UsuarioDTO propietario = null;
         MultipartFile archivo = null;
         ArchivoDTO archivoDTO = new ArchivoDTO();
         archivoDTO.setNombreArchivo("init");
         archivoDTO.setArchivo("init");
         List<ArchivoDTO> archivos = new ArrayList<>();
         archivos.add(archivoDTO);
-        if(documento!=null){
-            revisar = documentoRepository.nombreAutor(documento.getNombre(), documento.getAutor());
-            if(!revisar.isPresent()){
-                documentoDTO.setNombre(documento.getNombre());
-                documentoDTO.setEtiquetas(documento.getEtiquetas());
-                documentoDTO.setDescripcion(documento.getDescripcion());
-                documentoDTO.setDescripcion(documento.getDescripcion());
-                documentoDTO.setEstado(documento.getEstado());
-                documentoDTO.setArchivo(archivos);
-                documentoDTO.setAutor(documento.getAutor());
-                documentoDTO = documentoRepository.save(documentoDTO);
-                return modelMapper.map(documentoDTO, DocumentoDTO.class);
+        propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
+        if(propietario!= null){
+            if(documento!=null){
+                revisar = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
+                if(!revisar.isPresent()){
+                    documentoDTO.setNombre(documento.getNombre());
+                    documentoDTO.setEtiquetas(documento.getEtiquetas());
+                    documentoDTO.setDescripcion(documento.getDescripcion());
+                    documentoDTO.setEstado(documento.getEstado());
+                    documentoDTO.setArchivo(archivos);
+                    documentoDTO.setUsuario(documento.getUsuario());
+                    documentoDTO = documentoRepository.save(documentoDTO);
+                    return modelMapper.map(documentoDTO, DocumentoDTO.class);
+                }
             }
-            
         }
         return null;
     }
@@ -72,7 +73,7 @@ public class DefaultDocumentoService implements DocumentoService{
         Documento auxiliar = new Documento();
          Optional<Documento> revisar = null;
         if(documento!=null){
-            revisar = documentoRepository.nombreAutor(documento.getNombre(), documento.getAutor());
+            revisar = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
             if(!revisar.isPresent()){
                 documentoDTO = documentoRepository.findById(documento.getId());
                 if(documentoDTO.isPresent()){
@@ -113,7 +114,7 @@ public class DefaultDocumentoService implements DocumentoService{
         ArchivoDTO file = new ArchivoDTO();
         boolean bandera = false;
         if(documento!=null && !archivo.isEmpty()){
-            documentoDTO = documentoRepository.nombreAutor(documento.getNombre(), documento.getAutor());
+            documentoDTO = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
             if(documentoDTO.isPresent()){
                 documentoDTO = documentoRepository.findById(documentoDTO.get().getId());
                 if(documentoDTO.isPresent()){
@@ -125,12 +126,12 @@ public class DefaultDocumentoService implements DocumentoService{
                         }
                     }
                     if(!bandera){
-                        file.setURL("C:\\java-exec\\upload-dir\\"+documento.getAutor()+"\\"+documento.getNombre()+"\\"+archivo.getOriginalFilename());
+                        file.setURL("C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+archivo.getOriginalFilename());
                         file.setNombreArchivo(archivo.getOriginalFilename());
                         file.setArchivo(archivo.getOriginalFilename());
                         archivos.add(file);
                         auxiliar.setArchivo(archivos);
-                        storageService.store(archivo,documento.getAutor(),documento.getNombre());
+                        storageService.store(archivo,documento.getUsuario(),documento.getNombre());
                         auxiliar = documentoRepository.save(auxiliar);
                         return modelMapper.map(auxiliar, DocumentoDTO.class);
                     }
@@ -149,7 +150,7 @@ public class DefaultDocumentoService implements DocumentoService{
         auxiliarArchivos = null;
         List<ArchivoDTO> archivos = new ArrayList<>();
         if(documento!=null && !archivo.matches("")){
-            documentoDTO = documentoRepository.findNombreDocumentoAutor(documento.getNombre(),documento.getAutor());
+            documentoDTO = documentoRepository.nombreAutor(documento.getNombre(),documento.getUsuario());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
                 archivos = null;
@@ -173,7 +174,7 @@ public class DefaultDocumentoService implements DocumentoService{
         Documento auxiliar = new Documento();
         List<ArchivoDTO> archivos = new ArrayList<>();
         if(documento!=null && archivo.matches("")){
-            documentoDTO = documentoRepository.findById(documento.getId());
+            documentoDTO = documentoRepository.nombreAutor(documento.getNombre(),documento.getUsuario());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
                 archivos = auxiliar.getArchivo();
@@ -193,7 +194,6 @@ public class DefaultDocumentoService implements DocumentoService{
     @Override
     public List<DocumentoDTO> consultarDocumento(String consulta) {
         
-        List<Documento> auxiliar = new ArrayList<>();
         List<Documento> documentos = new ArrayList<>();
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         List<String> consultaList = new ArrayList<>();
@@ -201,32 +201,8 @@ public class DefaultDocumentoService implements DocumentoService{
         for(String eti:consultaSplit){
             consultaList.add(eti);
         }
-        UsuarioDTO autorDTO = new UsuarioDTO();
-        autorDTO = usuarioService.buscarUsuarioNombre(consulta);
-        if(autorDTO.getTipoUsuario()){
-            return mostrarDocumentos();
-        }
-        if(!consulta.matches("")){
-            auxiliar = documentoRepository.findNombreDocumento(consulta);
-            if(!auxiliar.isEmpty()){
-                documentos.addAll(auxiliar);
-                auxiliar.clear();
-            }
-        }
-        if(autorDTO!=null){
-            auxiliar = documentoRepository.findAutor(autorDTO.getUsuario());
-            if(!auxiliar.isEmpty()){
-                documentos.addAll(auxiliar);
-                auxiliar.clear();
-            }
-        }
-        if(!consulta.isEmpty()){
-           auxiliar = documentoRepository.findEtiqueta(consultaList);
-           if(!auxiliar.isEmpty()){
-               documentos.addAll(auxiliar);
-               auxiliar.clear();
-           }
-        }
+        
+        documentos = documentoRepository.findConsulta(consulta, consultaList);
         if(!documentos.isEmpty())
         {
             for(Documento documento: documentos){

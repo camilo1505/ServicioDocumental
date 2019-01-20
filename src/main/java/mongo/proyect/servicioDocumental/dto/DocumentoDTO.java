@@ -21,7 +21,7 @@ public class DocumentoDTO {
     private boolean estado;
     private List<ArchivoDTO> archivo;
     
-    private String autor;
+    private String usuario;
 
     public ObjectId getId() {
         return id;
@@ -71,12 +71,12 @@ public class DocumentoDTO {
         this.archivo = archivo;
     }
 
-    public String getAutor() {
-        return autor;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setAutor(String autor) {
-        this.autor = autor;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
     
     
