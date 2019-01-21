@@ -38,21 +38,15 @@ public class DefaultDocumentoService implements DocumentoService{
     
     @Override
     public DocumentoDTO crearDocumento(DocumentoDTO documento) {
-        System.out.println("entre a crear un documento");
         Documento documentoDTO = new Documento();
         Optional<Documento> revisar = null;
         List<ArchivoDTO> archivoDTO = new ArrayList<>();
         UsuarioDTO propietario = null;
-        System.out.println("voy a buscar el usuario");
         propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
         if(propietario != null){
-            System.out.println("existe ese usuario");
             if(documento!=null){
-                System.out.println("el documento existe");
                 revisar = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
-                System.out.println("revise si el documento existe");
                 if(!revisar.isPresent()){
-                    System.out.println("el documento no existe");
                     documentoDTO.setNombre(documento.getNombre());
                     documentoDTO.setEtiquetas(documento.getEtiquetas());
                     documentoDTO.setDescripcion(documento.getDescripcion());
@@ -114,25 +108,18 @@ public class DefaultDocumentoService implements DocumentoService{
         List<ArchivoDTO> archivos = new ArrayList<>();
         ArchivoDTO file = new ArchivoDTO();
         boolean bandera = false;
-        System.out.println("bienvenido a guardar un archivo");
                 
         if(documento!=null && !archivo.isEmpty()){
-            System.out.println("hemos confirmado que su archivo esta bien subido");
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
-            System.out.println("estamos verificando que el nombre del documento que usted indica, si exista");
             if(documentoDTO.isPresent()){
-                System.out.println("con el documento obtenido, ahora vamos a guardar el archivo");
                 auxiliar = documentoDTO.get();
                 archivos = auxiliar.getArchivo();
-                System.out.println("vamos a verificar que no existe ese archivo en el documento");
                 for(ArchivoDTO fil:archivos){
                     if(fil.getNombreArchivo().matches(archivo.getOriginalFilename())){
-                        System.out.println("el documento existe, no es posible guardar el archivo");
                         bandera = true;
                     }
                 }
                 if(!bandera){
-                    System.out.println("estamos guardando el archivo en el documento");
                     file.setURL("C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+archivo.getOriginalFilename());
                     file.setNombreArchivo(archivo.getOriginalFilename());
                     file.setArchivo(archivo.getOriginalFilename());
