@@ -37,7 +37,6 @@ public class DocumentoController {
     @PostMapping("/crearDocumento")
     public ResponseEntity<?> crearDocumento(
             @RequestBody DocumentoDTO documento){
-        
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!= null){
             documentoDTO = documentoService.crearDocumento(documento);
@@ -82,13 +81,13 @@ public class DocumentoController {
             @RequestParam("nombreArchivo") String nombreArchivo,
             @RequestParam("autor")String autor,
             @RequestParam("file") MultipartFile file){
-        
+        System.out.println("entre a guardar un archivo");
         DocumentoDTO documento = new DocumentoDTO();
         documento.setNombre(nombreArchivo);
         documento.setUsuario(autor);
-        System.out.println("entre a guardar los archivos");
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null && file!=null){
+            System.out.println("vamos a guardarlo!");
             documentoDTO = documentoService.guardarArchivo(documento,file);
             if(documentoDTO !=null){
                 return ResponseEntity.ok(documentoDTO);
