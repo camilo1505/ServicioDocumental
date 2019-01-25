@@ -6,17 +6,25 @@
 package mongo.proyect.servicioDocumental.dto;
 
 import org.bson.types.ObjectId;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author junpa
  */
 public class ArchivoDTO {
+    private ObjectId id;
     private String archivo;
     private String textoCompleto;
     private String URL;
 
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+    
     public String getArchivo() {
         return archivo;
     }

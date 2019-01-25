@@ -88,13 +88,14 @@ public class DocumentoController {
         DocumentoDTO documento = new DocumentoDTO();
         documento.setNombre(nombreArchivo);
         documento.setUsuario(autor);
+        List<String> subidos = new ArrayList<>();
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null && file!=null){
             for(MultipartFile archivo:file){
                 documentoDTO = documentoService.guardarArchivo(documento,archivo);
             }
             if(documentoDTO !=null){
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok(subidos);
             }
         }
         return ResponseEntity.badRequest().build();

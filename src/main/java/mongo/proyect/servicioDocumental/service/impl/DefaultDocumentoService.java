@@ -262,20 +262,16 @@ public class DefaultDocumentoService implements DocumentoService{
         tesseract.setDatapath("C:\\java-exec\\tessdata");
         String resultado = "";
         String resultadoPDF = "";
-        List<File> pdfFile = new ArrayList<>();
+        File pdfFile = null;
         tesseract.setLanguage("spa");
         BufferedImage img = null;
         if (!"png".equals(ext) && !"jpg".equals(ext)) {
             if("pdf".equals(ext)){
                 pdfFile = OCRFilesPDF(documento, file);
-                for(File page:pdfFile){
-                    img = ImageIO.read(new File(direccion+"\\"+page.getName()));
-                    resultado = tesseract.doOCR(img);
-                    resultadoPDF+= " " + resultado;
-                }
-                for (File archivo : pdfFile){
-                    archivo.delete();
-                }
+                img = ImageIO.read(new File(direccion+"\\"+pdfFile.getName()));
+                resultado = tesseract.doOCR(img);
+                resultadoPDF+= " " + resultado;
+                pdfFile.delete();
                 return resultadoPDF;
             }
             return resultado;
@@ -289,13 +285,13 @@ public class DefaultDocumentoService implements DocumentoService{
         return resultado;	
     }
     
-    public List<File> OCRFilesPDF(DocumentoDTO documento,MultipartFile file) throws Exception{
+    public File OCRFilesPDF(DocumentoDTO documento,MultipartFile file) throws Exception{
         try {
             String sourceDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+file.getOriginalFilename();
             String destinationDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
             File sourceFile = new File(sourceDir);
             File destinationFile = new File(destinationDir);
-            List<File> imagenesPDF = new ArrayList<>();
+            File imagenesPDF = null;
             if (!destinationFile.exists()) {
                 destinationFile.mkdir();
             }
@@ -305,13 +301,11 @@ public class DefaultDocumentoService implements DocumentoService{
                 List<PDPage> list = document.getDocumentCatalog().getAllPages();
                 String fileName = sourceFile.getName().replace(".pdf", "");
                 int pageNumber = 1;
-                for (PDPage page : list) {
-                    BufferedImage image = page.convertToImage();
-                    File outputfile = new File(destinationDir + fileName + "_" + pageNumber + ".png");
-                    ImageIO.write(image, "png", outputfile);
-                    pageNumber++;
-                    imagenesPDF.add(outputfile);
-                }
+                BufferedImage image = list.get(pageNumber).convertToImage();
+                File outputfile = new File(destinationDir + fileName + "_" + pageNumber + ".png");
+                ImageIO.write(image, "png", outputfile);
+                pageNumber++;
+                imagenesPDF = outputfile;
                 document.close();
                 return imagenesPDF;
             } else {
