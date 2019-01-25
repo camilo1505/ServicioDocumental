@@ -80,7 +80,6 @@ public class DefaultDocumentoService implements DocumentoService{
         Optional<Documento> revisar = null;
         if(documento!=null){
             revisar = documentoRepository.findById(documento.getId());
-            System.out.println("encontre el documento");
             if(revisar.isPresent()){
                 auxiliar = revisar.get();
                 auxiliar.setNombre(documento.getNombre());
@@ -145,7 +144,7 @@ public class DefaultDocumentoService implements DocumentoService{
                     return modelMapper.map(auxiliar, DocumentoDTO.class);
                 }
             }
-            }
+        }
         return null;
     }
 
@@ -256,7 +255,6 @@ public class DefaultDocumentoService implements DocumentoService{
         return null;
     }
     
-    @Override
     public String OCRFiles(DocumentoDTO documento,MultipartFile file) throws Exception{
         String ext = FilenameUtils.getExtension(file.getOriginalFilename());
         String direccion = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
@@ -273,65 +271,55 @@ public class DefaultDocumentoService implements DocumentoService{
                 for(File page:pdfFile){
                     img = ImageIO.read(new File(direccion+"\\"+page.getName()));
                     resultado = tesseract.doOCR(img);
-                    resultadoPDF+=" "+resultado;
-                    System.out.println("resultado: " +resultado);
+                    resultadoPDF+= " " + resultado;
                 }
                 for (File archivo : pdfFile){
                     archivo.delete();
                 }
-                System.out.println("documento PDF: " + resultadoPDF);
-                
                 return resultadoPDF;
             }
-            return "";
+            return resultado;
         }
         try {
             img = ImageIO.read(file.getInputStream());
-            
-            resultado = tesseract.doOCR(img);	
-            System.out.println("resultado:" + resultado);
-            
+            resultado = tesseract.doOCR(img);
         } catch (IOException e) {
                 throw new Exception("error al leer el archivo");
         }
-        
-            return resultado;	
+        return resultado;	
     }
     
     public List<File> OCRFilesPDF(DocumentoDTO documento,MultipartFile file) throws Exception{
         try {
-                String sourceDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+file.getOriginalFilename();
-                String destinationDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
-                File sourceFile = new File(sourceDir);
-                File destinationFile = new File(destinationDir);
-                List<File> imagenesPDF = new ArrayList<>();
-                if (!destinationFile.exists()) {
-                        destinationFile.mkdir();
+            String sourceDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+file.getOriginalFilename();
+            String destinationDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
+            File sourceFile = new File(sourceDir);
+            File destinationFile = new File(destinationDir);
+            List<File> imagenesPDF = new ArrayList<>();
+            if (!destinationFile.exists()) {
+                destinationFile.mkdir();
+            }
+            if (sourceFile.exists()) {
+                PDDocument document = PDDocument.load(sourceDir);
+                @SuppressWarnings("unchecked")
+                List<PDPage> list = document.getDocumentCatalog().getAllPages();
+                String fileName = sourceFile.getName().replace(".pdf", "");
+                int pageNumber = 1;
+                for (PDPage page : list) {
+                    BufferedImage image = page.convertToImage();
+                    File outputfile = new File(destinationDir + fileName + "_" + pageNumber + ".png");
+                    ImageIO.write(image, "png", outputfile);
+                    pageNumber++;
+                    imagenesPDF.add(outputfile);
                 }
-                if (sourceFile.exists()) {
-                        PDDocument document = PDDocument.load(sourceDir);
-                        @SuppressWarnings("unchecked")
-                        List<PDPage> list = document.getDocumentCatalog().getAllPages();
-
-                        String fileName = sourceFile.getName().replace(".pdf", "");
-                        int pageNumber = 1;
-                        for (PDPage page : list) {
-                                BufferedImage image = page.convertToImage();
-                                File outputfile = new File(destinationDir + fileName + "_" + pageNumber + ".png");
-                                ImageIO.write(image, "png", outputfile);
-                                pageNumber++;
-                                imagenesPDF.add(outputfile);
-                        }
-                        document.close();
-                        return imagenesPDF;
-                } else {
-                        return null;
-                }
-
+                document.close();
+                return imagenesPDF;
+            } else {
+                    return null;
+            }
         } catch (Exception e) {
-                e.printStackTrace();
+            throw new Exception("error al leer el archivo");
         }
-        return null;
     }
 
 }

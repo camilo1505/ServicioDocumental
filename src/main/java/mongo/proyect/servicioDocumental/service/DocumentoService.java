@@ -33,5 +33,4 @@ public interface DocumentoService {
     
     List<DocumentoDTO> misDocumentos(String autor);
     
-    String OCRFiles(DocumentoDTO documento,MultipartFile file) throws Exception;
 }

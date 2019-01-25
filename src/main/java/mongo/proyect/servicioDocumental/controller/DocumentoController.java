@@ -82,7 +82,7 @@ public class DocumentoController {
     public ResponseEntity<?> guardarArchivo(
             @RequestParam("nombreArchivo") String nombreArchivo,
             @RequestParam("autor")String autor,
-            @RequestParam(name = "file") MultipartFile file) throws Exception{
+            @RequestParam(name = "file") MultipartFile[] file) throws Exception{
         
         
         DocumentoDTO documento = new DocumentoDTO();
@@ -90,7 +90,9 @@ public class DocumentoController {
         documento.setUsuario(autor);
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null && file!=null){
-            documentoDTO = documentoService.guardarArchivo(documento,file);
+            for(MultipartFile archivo:file){
+                documentoDTO = documentoService.guardarArchivo(documento,archivo);
+            }
             if(documentoDTO !=null){
                 return ResponseEntity.ok().build();
             }
