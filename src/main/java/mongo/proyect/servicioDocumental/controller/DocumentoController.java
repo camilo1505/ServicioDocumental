@@ -38,10 +38,11 @@ public class DocumentoController {
     public ResponseEntity<?> crearDocumento(
             @RequestBody DocumentoDTO documento){
         DocumentoDTO documentoDTO = new DocumentoDTO();
+        
         if(documento!= null){
             documentoDTO = documentoService.crearDocumento(documento);
             if(documentoDTO!=null){
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok(documentoDTO);
             }
         }
         return ResponseEntity.badRequest().build();
@@ -50,7 +51,10 @@ public class DocumentoController {
     @PutMapping("/editarDocumento")
     public ResponseEntity<?> editarDocumento(
             @RequestBody DocumentoDTO documento){
-        
+        System.out.println("documento para editar");
+        System.out.println("nombre: " + documento.getNombre());
+        System.out.println("descripcion: " + documento.getDescripcion());
+        System.out.println("etiquetas: " + documento.getEtiquetas());
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null){
             documentoDTO = documentoService.editarDocumento(documento);
@@ -78,7 +82,9 @@ public class DocumentoController {
     public ResponseEntity<?> guardarArchivo(
             @RequestParam("nombreArchivo") String nombreArchivo,
             @RequestParam("autor")String autor,
-            @RequestParam("file") MultipartFile file){
+            @RequestParam(name = "file") MultipartFile file) throws Exception{
+        
+        
         DocumentoDTO documento = new DocumentoDTO();
         documento.setNombre(nombreArchivo);
         documento.setUsuario(autor);

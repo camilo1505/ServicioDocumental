@@ -13,11 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
  * @author junpa
  */
 public class ArchivoDTO {
-    private ObjectId id;
-    private String nombreArchivo;
     private String archivo;
+    private String textoCompleto;
     private String URL;
-    
 
     public String getArchivo() {
         return archivo;
@@ -25,22 +23,6 @@ public class ArchivoDTO {
 
     public void setArchivo(String archivo) {
         this.archivo = archivo;
-    }
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public String getNombreArchivo() {
-        return nombreArchivo;
-    }
-
-    public void setNombreArchivo(String nombreArchivo) {
-        this.nombreArchivo = nombreArchivo;
     }
 
     public String getURL() {
@@ -51,6 +33,17 @@ public class ArchivoDTO {
         this.URL = URL;
     }
 
+    public String getTextoCompleto() {
+        return textoCompleto;
+    }
+
+    public void setTextoCompleto(String textoCompleto) {
+        this.textoCompleto = textoCompleto;
+    }
+    
+    
+
+    
 
     
 }

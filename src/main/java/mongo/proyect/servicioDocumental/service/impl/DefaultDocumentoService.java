@@ -5,9 +5,13 @@
  */
 package mongo.proyect.servicioDocumental.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.imageio.ImageIO;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import mongo.proyect.servicioDocumental.dto.UsuarioDTO;
@@ -16,10 +20,17 @@ import mongo.proyect.servicioDocumental.repository.DocumentoRepository;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
 import mongo.proyect.servicioDocumental.service.UsuarioService;
 import mongo.proyect.servicioDocumental.storage.FileSystemStorageService;
+
+import net.sourceforge.tess4j.Tesseract;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
  *
@@ -66,21 +77,19 @@ public class DefaultDocumentoService implements DocumentoService{
         
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
-         Optional<Documento> revisar = null;
+        Optional<Documento> revisar = null;
         if(documento!=null){
-            revisar = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
-            if(!revisar.isPresent()){
-                documentoDTO = documentoRepository.findById(documento.getId());
-                if(documentoDTO.isPresent()){
-                    auxiliar = documentoDTO.get();
-                    auxiliar.setNombre(documento.getNombre());
-                    auxiliar.setDescripcion(documento.getDescripcion());
-                    auxiliar.setEstado(documento.getEstado());
-                    auxiliar.setEtiquetas(documento.getEtiquetas());
-                    auxiliar = documentoRepository.save(auxiliar);
-                    return modelMapper.map(auxiliar, DocumentoDTO.class);
-                }
-            }
+            revisar = documentoRepository.findById(documento.getId());
+            System.out.println("encontre el documento");
+            if(revisar.isPresent()){
+                auxiliar = revisar.get();
+                auxiliar.setNombre(documento.getNombre());
+                auxiliar.setDescripcion(documento.getDescripcion());
+                auxiliar.setEstado(documento.getEstado());
+                auxiliar.setEtiquetas(documento.getEtiquetas());
+                auxiliar = documentoRepository.save(auxiliar);
+                return modelMapper.map(auxiliar, DocumentoDTO.class);
+               }
         }
         return null;
     }
@@ -102,10 +111,12 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public DocumentoDTO guardarArchivo(DocumentoDTO documento, MultipartFile archivo) {
+    public DocumentoDTO guardarArchivo(DocumentoDTO documento, MultipartFile archivo) throws Exception{
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         List<ArchivoDTO> archivos = new ArrayList<>();
+        String direccion = "";
+        String ocr = "";
         ArchivoDTO file = new ArchivoDTO();
         boolean bandera = false;
                 
@@ -115,23 +126,26 @@ public class DefaultDocumentoService implements DocumentoService{
                 auxiliar = documentoDTO.get();
                 archivos = auxiliar.getArchivo();
                 for(ArchivoDTO fil:archivos){
-                    if(fil.getNombreArchivo().matches(archivo.getOriginalFilename())){
+                    if(fil.getArchivo().matches(archivo.getOriginalFilename())){
                         bandera = true;
                     }
                 }
                 if(!bandera){
-                    file.setURL("C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+archivo.getOriginalFilename());
-                    file.setNombreArchivo(archivo.getOriginalFilename());
+                    direccion = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+archivo.getOriginalFilename();
+                    file.setURL(direccion);
+                    File archivoFile = new File(direccion);
                     file.setArchivo(archivo.getOriginalFilename());
+                    
                     archivos.add(file);
                     auxiliar.setArchivo(archivos);
                     storageService.store(archivo,documento.getUsuario(),documento.getNombre());
+                    ocr = OCRFiles(documento,archivo);
+                    file.setTextoCompleto(ocr);
                     auxiliar = documentoRepository.save(auxiliar);
                     return modelMapper.map(auxiliar, DocumentoDTO.class);
                 }
-                
             }
-        }
+            }
         return null;
     }
 
@@ -149,7 +163,7 @@ public class DefaultDocumentoService implements DocumentoService{
                 auxiliar = documentoDTO.get();
                 archivos = null;
                 for(ArchivoDTO arc:archivos){
-                    if(!arc.getNombreArchivo().matches(archivo)){
+                    if(!arc.getArchivo().matches(archivo)){
                         auxiliarArchivos.add(arc);
                     }   
                 }
@@ -173,8 +187,8 @@ public class DefaultDocumentoService implements DocumentoService{
                 auxiliar = documentoDTO.get();
                 archivos = auxiliar.getArchivo();
                 for(ArchivoDTO arc:archivos){
-                    if(arc.getNombreArchivo().matches(archivo)){
-                        arc.setNombreArchivo(nombreArchivo);
+                    if(arc.getArchivo().matches(archivo)){
+                        arc.setArchivo(nombreArchivo);
                     }
                 }
                 auxiliar.setArchivo(archivos);
@@ -242,6 +256,82 @@ public class DefaultDocumentoService implements DocumentoService{
         return null;
     }
     
+    @Override
+    public String OCRFiles(DocumentoDTO documento,MultipartFile file) throws Exception{
+        String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+        String direccion = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
+        Tesseract tesseract = new Tesseract();
+        tesseract.setDatapath("C:\\java-exec\\tessdata");
+        String resultado = "";
+        String resultadoPDF = "";
+        List<File> pdfFile = new ArrayList<>();
+        tesseract.setLanguage("spa");
+        BufferedImage img = null;
+        if (!"png".equals(ext) && !"jpg".equals(ext)) {
+            if("pdf".equals(ext)){
+                pdfFile = OCRFilesPDF(documento, file);
+                for(File page:pdfFile){
+                    img = ImageIO.read(new File(direccion+"\\"+page.getName()));
+                    resultado = tesseract.doOCR(img);
+                    resultadoPDF+=" "+resultado;
+                    System.out.println("resultado: " +resultado);
+                }
+                for (File archivo : pdfFile){
+                    archivo.delete();
+                }
+                System.out.println("documento PDF: " + resultadoPDF);
+                
+                return resultadoPDF;
+            }
+            return "";
+        }
+        try {
+            img = ImageIO.read(file.getInputStream());
+            
+            resultado = tesseract.doOCR(img);	
+            System.out.println("resultado:" + resultado);
+            
+        } catch (IOException e) {
+                throw new Exception("error al leer el archivo");
+        }
+        
+            return resultado;	
+    }
     
-    
+    public List<File> OCRFilesPDF(DocumentoDTO documento,MultipartFile file) throws Exception{
+        try {
+                String sourceDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+file.getOriginalFilename();
+                String destinationDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
+                File sourceFile = new File(sourceDir);
+                File destinationFile = new File(destinationDir);
+                List<File> imagenesPDF = new ArrayList<>();
+                if (!destinationFile.exists()) {
+                        destinationFile.mkdir();
+                }
+                if (sourceFile.exists()) {
+                        PDDocument document = PDDocument.load(sourceDir);
+                        @SuppressWarnings("unchecked")
+                        List<PDPage> list = document.getDocumentCatalog().getAllPages();
+
+                        String fileName = sourceFile.getName().replace(".pdf", "");
+                        int pageNumber = 1;
+                        for (PDPage page : list) {
+                                BufferedImage image = page.convertToImage();
+                                File outputfile = new File(destinationDir + fileName + "_" + pageNumber + ".png");
+                                ImageIO.write(image, "png", outputfile);
+                                pageNumber++;
+                                imagenesPDF.add(outputfile);
+                        }
+                        document.close();
+                        return imagenesPDF;
+                } else {
+                        return null;
+                }
+
+        } catch (Exception e) {
+                e.printStackTrace();
+        }
+        return null;
+    }
+
 }

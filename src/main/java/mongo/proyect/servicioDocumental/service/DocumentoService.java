@@ -21,7 +21,7 @@ public interface DocumentoService {
     
     DocumentoDTO eliminarDocumento(DocumentoDTO documento);
     
-    DocumentoDTO guardarArchivo(DocumentoDTO documento, MultipartFile file);
+    DocumentoDTO guardarArchivo(DocumentoDTO documento, MultipartFile file) throws Exception;
     
     DocumentoDTO eliminarArchivo(DocumentoDTO documento,String archivo);
     
@@ -32,4 +32,6 @@ public interface DocumentoService {
     List<DocumentoDTO> mostrarDocumentos();
     
     List<DocumentoDTO> misDocumentos(String autor);
+    
+    String OCRFiles(DocumentoDTO documento,MultipartFile file) throws Exception;
 }
