@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import mongo.proyect.servicioDocumental.entity.Documento;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DocumentoRepository extends MongoRepository<Documento, ObjectId>{
     
+    
     //@Query("{nombre:{$regex:'?0',$options:'i'},usuario:{$regex:'?1',$options:'i'}, estado:true}")
     //Optional<Documento> findNombreDocumentoAutor( String nombreDocumento, String usuario);
     
@@ -28,12 +31,14 @@ public interface DocumentoRepository extends MongoRepository<Documento, ObjectId
     
     //@Query("{usuario:{$regex:'?0',$options:'i'},estado:true}")
     //List<Documento> findAutor(String usuario);
-    
+
     @Query("{usuario:'?0'}")
     List<Documento> findAutorMisDocumentos(String usuario);
     
+    
     //@Query("{etiquetas: { $in: [?0] }, estado:true}")
     //List<Documento> findEtiqueta(List<String> etiquetas);
+    
     /*@Query("mapReduce("
             + "function() {"
             + "     this.etiquetas.forEach(function(item){ emit(item,1); });"

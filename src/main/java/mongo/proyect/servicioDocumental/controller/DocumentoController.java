@@ -10,6 +10,7 @@ import java.util.List;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -64,7 +65,7 @@ public class DocumentoController {
     
     @DeleteMapping("/eliminarDocumento")
     public ResponseEntity<?> eliminarDocumento(
-            @RequestBody DocumentoDTO documento){
+            @RequestParam("id") ObjectId documento){
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null){
             documentoDTO = documentoService.eliminarDocumento(documento);

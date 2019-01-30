@@ -25,6 +25,7 @@ import net.sourceforge.tess4j.Tesseract;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.bson.types.ObjectId;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,11 +92,11 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public DocumentoDTO eliminarDocumento(DocumentoDTO documento) {
+    public DocumentoDTO eliminarDocumento(ObjectId documento) {
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         if(documento!=null){
-            documentoDTO = documentoRepository.findById(documento.getId());
+            documentoDTO = documentoRepository.findById(documento);
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
                 documentoRepository.delete(auxiliar);

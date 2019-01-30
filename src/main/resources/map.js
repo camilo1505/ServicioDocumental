@@ -1,0 +1,4 @@
+    function() 
+    {
+        emit( this.etiquetas);    
+    }

@@ -5,12 +5,12 @@
  */
 package mongo.proyect.servicioDocumental.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -28,6 +28,7 @@ public class Documento {
     
     private String usuario;
 
+    
     public ObjectId getId() {
         return id;
     }
@@ -83,4 +84,5 @@ public class Documento {
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
+    
 }
