@@ -5,34 +5,18 @@
  */
 package mongo.proyect.servicioDocumental.dto;
 
-import org.bson.types.ObjectId;
 
 /**
  *
  * @author junpa
  */
 public class ArchivoDTO {
-    private ObjectId id;
-    private String archivo;
+    
+    private String nombreArchivo;
     private String textoCompleto;
     private String URL;
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
+    private boolean OCR;
     
-    public String getArchivo() {
-        return archivo;
-    }
-
-    public void setArchivo(String archivo) {
-        this.archivo = archivo;
-    }
-
     public String getURL() {
         return URL;
     }
@@ -48,10 +32,22 @@ public class ArchivoDTO {
     public void setTextoCompleto(String textoCompleto) {
         this.textoCompleto = textoCompleto;
     }
-    
-    
 
-    
+    public boolean isOCR() {
+        return OCR;
+    }
 
+    public void setOCR(boolean OCR) {
+        this.OCR = OCR;
+    }
+
+    public String getNombreArchivo() {
+        return nombreArchivo;
+    }
+
+    public void setNombreArchivo(String nombreArchivo) {
+        this.nombreArchivo = nombreArchivo;
+    }
+    
     
 }

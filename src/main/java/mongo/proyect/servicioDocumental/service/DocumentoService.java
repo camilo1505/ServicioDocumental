@@ -6,6 +6,7 @@
 package mongo.proyect.servicioDocumental.service;
 
 import java.util.List;
+import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +22,7 @@ public interface DocumentoService {
     
     DocumentoDTO eliminarDocumento(DocumentoDTO documento);
     
-    DocumentoDTO guardarArchivo(DocumentoDTO documento, MultipartFile file) throws Exception;
+    DocumentoDTO guardarArchivo(DocumentoDTO documento, ArchivoDTO archivoDTO, MultipartFile file) throws Exception;
     
     DocumentoDTO eliminarArchivo(DocumentoDTO documento,String archivo);
     
@@ -29,7 +30,7 @@ public interface DocumentoService {
     
     List<DocumentoDTO> consultarDocumento(String consulta);
     
-    List<DocumentoDTO> mostrarDocumentos();
+    List<DocumentoDTO> mostrarDocumentos(String usuario);
     
     List<DocumentoDTO> misDocumentos(String autor);
     

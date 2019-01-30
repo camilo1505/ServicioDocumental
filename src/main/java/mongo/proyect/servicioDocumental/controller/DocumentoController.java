@@ -7,6 +7,7 @@ package mongo.proyect.servicioDocumental.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +52,6 @@ public class DocumentoController {
     @PutMapping("/editarDocumento")
     public ResponseEntity<?> editarDocumento(
             @RequestBody DocumentoDTO documento){
-        System.out.println("documento para editar");
-        System.out.println("nombre: " + documento.getNombre());
-        System.out.println("descripcion: " + documento.getDescripcion());
-        System.out.println("etiquetas: " + documento.getEtiquetas());
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null){
             documentoDTO = documentoService.editarDocumento(documento);
@@ -80,22 +77,22 @@ public class DocumentoController {
     
     @PostMapping("/guardarArchivo")
     public ResponseEntity<?> guardarArchivo(
-            @RequestParam("nombreArchivo") String nombreArchivo,
+            @RequestParam("nombreDocumento") String nombreDocumento,
             @RequestParam("autor")String autor,
-            @RequestParam(name = "file") MultipartFile[] file) throws Exception{
-        
+            @RequestParam("archivo") MultipartFile file,
+            @RequestParam("ocr") boolean ocr) throws Exception{
         
         DocumentoDTO documento = new DocumentoDTO();
-        documento.setNombre(nombreArchivo);
+        documento.setNombre(nombreDocumento);
         documento.setUsuario(autor);
-        List<String> subidos = new ArrayList<>();
+        ArchivoDTO archivo = new ArchivoDTO();
+        archivo.setOCR(ocr);
+        archivo.setNombreArchivo(file.getOriginalFilename());
         DocumentoDTO documentoDTO = new DocumentoDTO();
-        if(documento!=null && file!=null){
-            for(MultipartFile archivo:file){
-                documentoDTO = documentoService.guardarArchivo(documento,archivo);
-            }
+        if(documento!=null && archivo!=null){
+            documentoDTO = documentoService.guardarArchivo(documento,archivo,file);
             if(documentoDTO !=null){
-                return ResponseEntity.ok(subidos);
+                return ResponseEntity.ok().build();
             }
         }
         return ResponseEntity.badRequest().build();
@@ -132,32 +129,26 @@ public class DocumentoController {
         return ResponseEntity.badRequest().build();
     }
     
-    @GetMapping("/consultarDocumento")
-    public ResponseEntity<?> consultarDocumeto(
-            @RequestParam("consulta") String consulta){
+    @GetMapping("/documentos")
+    public ResponseEntity<?> documentos(
+            @RequestParam("usuario") String usuario){
         
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        if(!consulta.matches("")){
-            documentosDTO = documentoService.consultarDocumento(consulta);
+        if(!usuario.matches("")){
+            documentosDTO = documentoService.consultarDocumento(usuario);
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }
-        }
-        else{
-            documentosDTO = documentoService.mostrarDocumentos();
-            if(documentosDTO!=null){
-                return ResponseEntity.ok(documentosDTO);
-            }
-        }        
+        }      
         return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/misDocumentos")
     public ResponseEntity<?> misDocumentos(
-            @RequestParam("autor") String autor ){        
+            @RequestParam("usuario") String usuario ){        
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        if(!autor.matches("")){
-            documentosDTO = documentoService.misDocumentos( autor);
+        if(!usuario.matches("")){
+            documentosDTO = documentoService.misDocumentos(usuario);
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }

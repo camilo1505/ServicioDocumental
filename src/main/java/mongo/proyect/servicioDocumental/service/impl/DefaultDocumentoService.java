@@ -22,7 +22,6 @@ import mongo.proyect.servicioDocumental.service.UsuarioService;
 import mongo.proyect.servicioDocumental.storage.FileSystemStorageService;
 
 import net.sourceforge.tess4j.Tesseract;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -30,7 +29,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
  *
@@ -74,7 +72,6 @@ public class DefaultDocumentoService implements DocumentoService{
 
     @Override
     public DocumentoDTO editarDocumento(DocumentoDTO documento) {
-        
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         Optional<Documento> revisar = null;
@@ -95,7 +92,6 @@ public class DefaultDocumentoService implements DocumentoService{
 
     @Override
     public DocumentoDTO eliminarDocumento(DocumentoDTO documento) {
-        
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         if(documento!=null){
@@ -110,36 +106,34 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public DocumentoDTO guardarArchivo(DocumentoDTO documento, MultipartFile archivo) throws Exception{
+    public DocumentoDTO guardarArchivo(DocumentoDTO documento, ArchivoDTO archivoDTO, MultipartFile file) throws Exception{
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         List<ArchivoDTO> archivos = new ArrayList<>();
         String direccion = "";
         String ocr = "";
-        ArchivoDTO file = new ArchivoDTO();
         boolean bandera = false;
                 
-        if(documento!=null && !archivo.isEmpty()){
+        if(documento!=null && file!=null){
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
                 archivos = auxiliar.getArchivo();
                 for(ArchivoDTO fil:archivos){
-                    if(fil.getArchivo().matches(archivo.getOriginalFilename())){
+                    if(fil.getNombreArchivo().matches(archivoDTO.getNombreArchivo())){
                         bandera = true;
                     }
                 }
                 if(!bandera){
-                    direccion = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+archivo.getOriginalFilename();
-                    file.setURL(direccion);
-                    File archivoFile = new File(direccion);
-                    file.setArchivo(archivo.getOriginalFilename());
-                    
-                    archivos.add(file);
+                    direccion = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+archivoDTO.getNombreArchivo();
+                    archivoDTO.setURL(direccion);
+                    archivos.add(archivoDTO);
                     auxiliar.setArchivo(archivos);
-                    storageService.store(archivo,documento.getUsuario(),documento.getNombre());
-                    ocr = OCRFiles(documento,archivo);
-                    file.setTextoCompleto(ocr);
+                    storageService.store(file,documento.getUsuario(),documento.getNombre());
+                    if(archivoDTO.isOCR()){
+                        ocr = OCRFiles(documento,file);
+                    }
+                    archivoDTO.setTextoCompleto(ocr);
                     auxiliar = documentoRepository.save(auxiliar);
                     return modelMapper.map(auxiliar, DocumentoDTO.class);
                 }
@@ -162,7 +156,7 @@ public class DefaultDocumentoService implements DocumentoService{
                 auxiliar = documentoDTO.get();
                 archivos = null;
                 for(ArchivoDTO arc:archivos){
-                    if(!arc.getArchivo().matches(archivo)){
+                    if(!arc.getNombreArchivo().matches(archivo)){
                         auxiliarArchivos.add(arc);
                     }   
                 }
@@ -178,6 +172,7 @@ public class DefaultDocumentoService implements DocumentoService{
     public DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento, String archivo, String nombreArchivo) {
         
         Optional<Documento> documentoDTO = null;
+        MultipartFile file = null;
         Documento auxiliar = new Documento();
         List<ArchivoDTO> archivos = new ArrayList<>();
         if(documento!=null && archivo.matches("")){
@@ -186,8 +181,9 @@ public class DefaultDocumentoService implements DocumentoService{
                 auxiliar = documentoDTO.get();
                 archivos = auxiliar.getArchivo();
                 for(ArchivoDTO arc:archivos){
-                    if(arc.getArchivo().matches(archivo)){
-                        arc.setArchivo(nombreArchivo);
+                    if(arc.getNombreArchivo().matches(archivo)){
+                        arc.setNombreArchivo(nombreArchivo);
+                        
                     }
                 }
                 auxiliar.setArchivo(archivos);
@@ -221,11 +217,11 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public List<DocumentoDTO> mostrarDocumentos() {
+    public List<DocumentoDTO> mostrarDocumentos(String usuario) {
         
         List<Documento> documentos = new ArrayList<>();
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        documentos = documentoRepository.findAll();
+        documentos = documentoRepository.consultaGeneral(usuario);
         if(!documentos.isEmpty()){
             for(Documento documento: documentos){
                 documentosDTO.add(modelMapper.map(documento,DocumentoDTO.class));
@@ -282,7 +278,7 @@ public class DefaultDocumentoService implements DocumentoService{
         } catch (IOException e) {
                 throw new Exception("error al leer el archivo");
         }
-        return resultado;	
+        return resultado;
     }
     
     public File OCRFilesPDF(DocumentoDTO documento,MultipartFile file) throws Exception{
