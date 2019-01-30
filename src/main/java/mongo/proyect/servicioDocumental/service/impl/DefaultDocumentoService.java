@@ -92,11 +92,11 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public DocumentoDTO eliminarDocumento(ObjectId documento) {
+    public DocumentoDTO eliminarDocumento(DocumentoDTO documento) {
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         if(documento!=null){
-            documentoDTO = documentoRepository.findById(documento);
+            documentoDTO = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
                 documentoRepository.delete(auxiliar);

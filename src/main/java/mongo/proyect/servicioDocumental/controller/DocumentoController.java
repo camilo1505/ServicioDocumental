@@ -65,10 +65,13 @@ public class DocumentoController {
     
     @DeleteMapping("/eliminarDocumento")
     public ResponseEntity<?> eliminarDocumento(
-            @RequestParam("id") ObjectId documento){
+            @RequestParam("nombreDocumento") String documento,
+            @RequestParam("usuario") String usuario){
         DocumentoDTO documentoDTO = new DocumentoDTO();
+        documentoDTO.setNombre(documento);
+        documentoDTO.setUsuario(usuario);
         if(documento!=null){
-            documentoDTO = documentoService.eliminarDocumento(documento);
+            documentoDTO = documentoService.eliminarDocumento(documentoDTO);
             if(documentoDTO!=null){
                 return ResponseEntity.ok().build();
             }

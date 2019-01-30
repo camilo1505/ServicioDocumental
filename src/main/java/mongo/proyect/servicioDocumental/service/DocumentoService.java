@@ -21,7 +21,7 @@ public interface DocumentoService {
     
     DocumentoDTO editarDocumento(DocumentoDTO documento);
     
-    DocumentoDTO eliminarDocumento(ObjectId documento);
+    DocumentoDTO eliminarDocumento(DocumentoDTO documento);
     
     DocumentoDTO guardarArchivo(DocumentoDTO documento, ArchivoDTO archivoDTO, MultipartFile file) throws Exception;
     
