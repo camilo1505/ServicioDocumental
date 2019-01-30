@@ -135,7 +135,7 @@ public class DocumentoController {
         
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         if(!usuario.matches("")){
-            documentosDTO = documentoService.consultarDocumento(usuario);
+            documentosDTO = documentoService.mostrarDocumentos(usuario);
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }
