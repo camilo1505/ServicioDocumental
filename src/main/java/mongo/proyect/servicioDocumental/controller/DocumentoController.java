@@ -171,7 +171,7 @@ public class DocumentoController {
         if(consulta.matches("")){
             documentosDTO = documentoService.mostrarDocumentos(usuario);
         }
-        return ResponseEntity.ok().build(documentosDTO);
+        return ResponseEntity.ok(documentosDTO);
     }
 
 }
