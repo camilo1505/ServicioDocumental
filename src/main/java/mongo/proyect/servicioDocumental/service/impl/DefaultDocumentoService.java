@@ -193,7 +193,6 @@ public class DefaultDocumentoService implements DocumentoService{
         }
         return null;
     }
-
     @Override
     public List<DocumentoDTO> consultarDocumento(String consulta) {
         

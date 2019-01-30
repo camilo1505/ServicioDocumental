@@ -158,7 +158,8 @@ public class DocumentoController {
     
     @GetMapping("/consultarDocumento")
     public ResponseEntity<?> consultarDocumeto(
-            @RequestParam("consulta") String consulta){
+            @RequestParam("consulta") String consulta,
+            @RequestParam("usuario") String usuario){
         
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         if(!consulta.matches("")){
@@ -166,8 +167,11 @@ public class DocumentoController {
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }
-        }        
-        return ResponseEntity.ok().build();
+        }
+        if(consulta.matches("")){
+            documentosDTO = documentoService.mostrarDocumentos(usuario);
+        }
+        return ResponseEntity.ok().build(documentosDTO);
     }
 
 }
