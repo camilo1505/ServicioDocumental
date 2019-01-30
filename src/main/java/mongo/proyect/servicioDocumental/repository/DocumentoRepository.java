@@ -52,8 +52,8 @@ public interface DocumentoRepository extends MongoRepository<Documento, ObjectId
     @Query("{nombre:'?0',usuario:'?1'}")
     Optional<Documento> nombreAutor( String nombreDocumento, String usuario);
     
-    @Query("{$or:[{nombre:{$regex: ?0,$options:'i'}}, {usuario:{$regex: ?0,$options:'i'}},{ etiquetas:{$in:[?1]}}]}")
-    List<Documento> findConsulta(String consulta, List<String> etiquetas);
+    @Query("{$or:[{nombre:{$regex: ?0,$options:'i'}}, {usuario:{$regex: ?0,$options:'i'}}]}")
+    List<Documento> findConsulta(String consulta);
     
     @Query("{$or:[{'estado':true},{'usuario':'?0'}]}")
     List<Documento> consultaGeneral(String autor);

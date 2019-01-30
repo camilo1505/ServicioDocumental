@@ -204,8 +204,7 @@ public class DefaultDocumentoService implements DocumentoService{
         for(String eti:consultaSplit){
             consultaList.add(eti);
         }
-        
-        documentos = documentoRepository.findConsulta(consulta, consultaList);
+        documentos = documentoRepository.findConsulta(consulta);
         if(!documentos.isEmpty())
         {
             for(Documento documento: documentos){

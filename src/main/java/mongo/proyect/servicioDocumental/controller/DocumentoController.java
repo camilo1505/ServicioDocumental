@@ -155,5 +155,19 @@ public class DocumentoController {
         }
         return ResponseEntity.badRequest().build();
     }
+    
+    @GetMapping("/consultarDocumento")
+    public ResponseEntity<?> consultarDocumeto(
+            @RequestParam("consulta") String consulta){
+        
+        List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        if(!consulta.matches("")){
+            documentosDTO = documentoService.consultarDocumento(consulta);
+            if(documentosDTO !=null){
+                return ResponseEntity.ok(documentosDTO);
+            }
+        }        
+        return ResponseEntity.ok().build();
+    }
 
 }
