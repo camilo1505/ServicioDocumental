@@ -9,13 +9,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.imageio.ImageIO;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import mongo.proyect.servicioDocumental.dto.UsuarioDTO;
 import mongo.proyect.servicioDocumental.entity.Documento;
+import mongo.proyect.servicioDocumental.entity.Etiquetas;
 import mongo.proyect.servicioDocumental.repository.DocumentoRepository;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
 import mongo.proyect.servicioDocumental.service.UsuarioService;
@@ -25,9 +28,10 @@ import net.sourceforge.tess4j.Tesseract;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.bson.types.ObjectId;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +49,8 @@ public class DefaultDocumentoService implements DocumentoService{
     private UsuarioService usuarioService;
     @Autowired
     private FileSystemStorageService storageService;
+    @Autowired
+    private MongoTemplate mongoTemplate;
     
     @Override
     public DocumentoDTO crearDocumento(DocumentoDTO documento) {
@@ -195,7 +201,7 @@ public class DefaultDocumentoService implements DocumentoService{
         return null;
     }
     @Override
-    public List<DocumentoDTO> consultarDocumento(String consulta) {
+    public List<DocumentoDTO> consultarDocumento(String consulta, String usuario) {
         
         List<Documento> documentos = new ArrayList<>();
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
@@ -204,7 +210,7 @@ public class DefaultDocumentoService implements DocumentoService{
         for(String eti:consultaSplit){
             consultaList.add(eti);
         }
-        documentos = documentoRepository.findConsulta(consulta);
+        documentos = documentoRepository.findConsulta(consulta,usuario);
         if(!documentos.isEmpty())
         {
             for(Documento documento: documentos){
@@ -216,11 +222,16 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public List<DocumentoDTO> mostrarDocumentos(String usuario) {
+    public List<DocumentoDTO> mostrarDocumentos(String usuario,boolean tipoConsulta,String consulta) {
         
         List<Documento> documentos = new ArrayList<>();
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        documentos = documentoRepository.consultaGeneral(usuario);
+        if(tipoConsulta){
+            documentos = documentoRepository.findConsulta(consulta,usuario);
+        }
+        else{
+            documentos = documentoRepository.consultaGeneral(usuario);
+        }
         if(!documentos.isEmpty()){
             for(Documento documento: documentos){
                 documentosDTO.add(modelMapper.map(documento,DocumentoDTO.class));
@@ -311,4 +322,18 @@ public class DefaultDocumentoService implements DocumentoService{
         }
     }
 
+    @Override
+    public List<Etiquetas> etiquetas()
+    {
+        List<Etiquetas> lista = new ArrayList<>();
+        MapReduceResults<Etiquetas> results = mongoTemplate.mapReduce("documento",
+                "classpath:map.js",
+                "classpath:reduce.js",
+                Etiquetas.class);
+        for(Etiquetas eti:results){
+            lista.add(eti);
+        }
+        return lista;
+    }
+    
 }

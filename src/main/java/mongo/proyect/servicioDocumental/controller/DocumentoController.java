@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
+import mongo.proyect.servicioDocumental.entity.Etiquetas;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -161,21 +161,33 @@ public class DocumentoController {
     }
     
     @GetMapping("/consultarDocumento")
-    public ResponseEntity<?> consultarDocumeto(
+    public ResponseEntity<?> consultarDocumento(
             @RequestParam("consulta") String consulta,
-            @RequestParam("usuario") String usuario){
+            @RequestParam("usuario") String usuario,
+            @RequestParam("tipoConsulta")boolean tipoConsulta){
         
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         if(!consulta.matches("")){
-            documentosDTO = documentoService.consultarDocumento(consulta);
+            documentosDTO = documentoService.consultarDocumento(consulta,usuario);
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }
         }
-        if(consulta.matches("")){
-            documentosDTO = documentoService.mostrarDocumentos(usuario);
+        else{
+            documentosDTO = documentoService.mostrarDocumentos(usuario,tipoConsulta,consulta);
         }
         return ResponseEntity.ok(documentosDTO);
     }
+    
+    @GetMapping("/eti")
+        public ResponseEntity<?> eti(){
+        List<Etiquetas> lista = new ArrayList<>();
+        lista = documentoService.etiquetas();
+        if(!lista.isEmpty())
+            {
+                return ResponseEntity.ok(lista);
+            }
+        return ResponseEntity.noContent().build();
+        }
 
 }

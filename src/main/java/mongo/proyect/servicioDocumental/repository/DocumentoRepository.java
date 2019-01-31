@@ -15,10 +15,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author junpa
- */
 @Repository
 public interface DocumentoRepository extends MongoRepository<Documento, ObjectId>{
     
@@ -57,9 +53,12 @@ public interface DocumentoRepository extends MongoRepository<Documento, ObjectId
     @Query("{nombre:'?0',usuario:'?1'}")
     Optional<Documento> nombreAutor( String nombreDocumento, String usuario);
     
-    @Query("{$or:[{ $and:[{nombre:{$regex: ?0,$options:'i'}},{estado:true}]},{ $and:[{usuario:{$regex: ?0,$options:'i'}},{estado:true}]}]}")
-    List<Documento> findConsulta(String consulta);
-    
-    @Query("{$or:[{'estado':true},{'usuario':'?0'}]}")
+    @Query("{$or:[{ $and:[{nombre:{$regex: ?0,$options:'i'}},{estado:true}]},{ $and:[{usuario:{$regex: ?0,$options:'i'}},{estado:true}]},[{usuario:?1}}}].sort({usuario:1})}")
+    List<Documento> findConsulta(String consulta, String usuario);
+
+    @Query("{$and:[{nombre:{$regex: ?0,$options:'i'}},{usuario:?1}]}")
+    List<Documento> findConsultaMisDocumentos(String consulta, String usuario);
+        
+    @Query("{$or:[{'estado':true},{'usuario':'?0'}].sort({usuario:1})}")
     List<Documento> consultaGeneral(String autor);
 }

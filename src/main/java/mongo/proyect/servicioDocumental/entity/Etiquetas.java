@@ -5,28 +5,31 @@
  */
 package mongo.proyect.servicioDocumental.entity;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "total")
+/**
+ *
+ * @author junpa
+ */
 public class Etiquetas {
-    private String etiqueta;
-    private int cantidad;
+    private String id;
+    private int value;
 
-    public String getEtiqueta() {
-        return etiqueta;
+    private void setId(String name)
+    {
+        this.id = name;
     }
 
-    public void setEtiqueta(String etiqueta) {
-        this.etiqueta = etiqueta;
+    private void setValue(int count)
+    {
+        this.value = count;
     }
 
-    public int getCantidad() {
-        return cantidad;
+    public String getId()
+    {
+        return id;
     }
 
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
+    public int getValue()
+    {
+        return value;
     }
-    
-    
 }

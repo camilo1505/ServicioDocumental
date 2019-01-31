@@ -8,7 +8,7 @@ package mongo.proyect.servicioDocumental.service;
 import java.util.List;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
-import org.bson.types.ObjectId;
+import mongo.proyect.servicioDocumental.entity.Etiquetas;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -29,11 +29,12 @@ public interface DocumentoService {
     
     DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
     
-    List<DocumentoDTO> consultarDocumento(String consulta);
+    List<DocumentoDTO> consultarDocumento(String consulta, String usuario);
     
-    List<DocumentoDTO> mostrarDocumentos(String usuario);
+    List<DocumentoDTO> mostrarDocumentos(String usuario,boolean tipoConsulta,String consulta);
     
     List<DocumentoDTO> misDocumentos(String autor);
     
+    List<Etiquetas> etiquetas();
     
 }
