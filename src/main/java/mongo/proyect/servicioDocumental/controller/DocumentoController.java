@@ -136,10 +136,11 @@ public class DocumentoController {
     @GetMapping("/documentos")
     public ResponseEntity<?> documentos(
             @RequestParam("usuario") String usuario){
-        
+        boolean tipoConsulta=false;
+        String consulta ="";
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         if(!usuario.matches("")){
-            documentosDTO = documentoService.mostrarDocumentos(usuario);
+            documentosDTO = documentoService.mostrarDocumentos(usuario,tipoConsulta,consulta);
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }
