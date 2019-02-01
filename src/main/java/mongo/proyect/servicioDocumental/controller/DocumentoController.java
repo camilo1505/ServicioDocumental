@@ -176,11 +176,16 @@ public class DocumentoController {
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }
+            return null;
         }
-        else{
+        if(tipoConsulta){
+            documentosDTO = documentoService.mostrarDocumentos(usuario,tipoConsulta,consulta);
+            return ResponseEntity.ok(documentosDTO);
+        }
+        if(consulta.matches("")){
             documentosDTO = documentoService.mostrarDocumentos(usuario,tipoConsulta,consulta);
         }
-        return ResponseEntity.ok(documentosDTO);
+        return null;
     }
     
     @GetMapping("/cloudEtiquetas")
