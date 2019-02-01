@@ -335,5 +335,21 @@ public class DefaultDocumentoService implements DocumentoService{
         }
         return lista;
     }
+
+    @Override
+    public List<DocumentoDTO> consultaEtiqueta(String etiqueta) {
+        List<Documento> documentos = new ArrayList<>();
+        List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        documentos = documentoRepository.findEtiqueta(etiqueta);
+        if(!documentos.isEmpty()){
+            for(Documento documento: documentos){
+                    documentosDTO.add(modelMapper.map(documento, DocumentoDTO.class));
+                }
+                return documentosDTO;
+            }
+        return null;
+    }
+    
+    
     
 }

@@ -63,7 +63,7 @@ public class DocumentoController {
         return ResponseEntity.badRequest().build();
     }
     
-    @DeleteMapping("/eliminarDocumento")
+    @PutMapping("/eliminarDocumento")
     public ResponseEntity<?> eliminarDocumento(
             @RequestParam("nombreDocumento") String documento,
             @RequestParam("usuario") String usuario){
@@ -102,14 +102,17 @@ public class DocumentoController {
         return ResponseEntity.badRequest().build();
     }
     
-    @DeleteMapping("/eliminarArchivo")
+    @PutMapping("/eliminarArchivo")
     public ResponseEntity<?> eliminarArchivo(
-            @RequestBody DocumentoDTO documento,
-            @RequestParam("archivo") String archivo){
+            @RequestParam ("documento") String documento,
+            @RequestParam("archivo") String archivo,
+            @RequestParam("usuario") String usuario){
         
         DocumentoDTO documentoDTO = new DocumentoDTO();
+        documentoDTO.setNombre(documento);
+        documentoDTO.setUsuario(usuario);
         if(documento!=null && !archivo.matches("")){
-            documentoDTO = documentoService.eliminarArchivo(documento, archivo);
+            documentoDTO = documentoService.eliminarArchivo(documentoDTO, archivo);
             if(documentoDTO !=null){
                 return ResponseEntity.ok().build();
             }
@@ -180,7 +183,7 @@ public class DocumentoController {
         return ResponseEntity.ok(documentosDTO);
     }
     
-    @GetMapping("/eti")
+    @GetMapping("/cloudEtiquetas")
         public ResponseEntity<?> eti(){
         List<Etiquetas> lista = new ArrayList<>();
         lista = documentoService.etiquetas();
@@ -189,6 +192,20 @@ public class DocumentoController {
                 return ResponseEntity.ok(lista);
             }
         return ResponseEntity.noContent().build();
+    }
+        
+    @GetMapping("/consultarEtiqueta")
+    public ResponseEntity<?> busquedaEtiqueta(
+    @RequestParam("etiqueta")String etiqueta){
+        List<DocumentoDTO> documentos = new ArrayList<>();
+        if(!etiqueta.matches("")){
+            documentos = documentoService.consultaEtiqueta(etiqueta);
+            if(!documentos.isEmpty())
+            {
+                return ResponseEntity.ok(documentos);
+            }
         }
+        return ResponseEntity.badRequest().build();
+    }
 
 }

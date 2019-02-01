@@ -37,4 +37,6 @@ public interface DocumentoService {
     
     List<Etiquetas> etiquetas();
     
+    List<DocumentoDTO> consultaEtiqueta(String etiqueta);
+    
 }
