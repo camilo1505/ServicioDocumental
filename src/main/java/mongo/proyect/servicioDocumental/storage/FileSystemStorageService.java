@@ -31,6 +31,7 @@ public class FileSystemStorageService {
 	@PostConstruct
 	public void init() {
 		this.uploadLocation = Paths.get(Constants.UPLOAD_LOCATION);
+                System.out.println("cosa: " + this.uploadLocation);
 		try {
 			Files.createDirectories(uploadLocation);
 		} catch (IOException e) {
@@ -91,7 +92,7 @@ public class FileSystemStorageService {
         
         public void crearArchivo(String autor,String documento){
              try {
-                    File directorio = new File("C:\\java-exec\\upload-dir\\"+autor+"\\"+documento);
+                    File directorio = new File("./src/main/resources/archivos/"+autor+"/"+documento);
                     directorio.mkdirs();
                 
             } catch(Exception e) {}

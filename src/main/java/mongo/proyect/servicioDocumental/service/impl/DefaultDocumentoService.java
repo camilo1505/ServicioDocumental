@@ -132,7 +132,7 @@ public class DefaultDocumentoService implements DocumentoService{
                     }
                 }
                 if(!bandera){
-                    direccion = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+archivoDTO.getNombreArchivo();
+                    direccion = "./src/main/resources/archivos/"+documento.getUsuario()+"/"+documento.getNombre()+"/"+archivoDTO.getNombreArchivo();
                     archivoDTO.setURL(direccion);
                     archivos.add(archivoDTO);
                     auxiliar.setArchivo(archivos);
@@ -263,9 +263,9 @@ public class DefaultDocumentoService implements DocumentoService{
     
     public String OCRFiles(DocumentoDTO documento,MultipartFile file) throws Exception{
         String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-        String direccion = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
+        String direccion = "./src/main/resources/archivos/"+documento.getUsuario()+"/"+documento.getNombre()+"/";
         Tesseract tesseract = new Tesseract();
-        tesseract.setDatapath("C:\\java-exec\\tessdata");
+        tesseract.setDatapath("./src/main/resources/tessdata");
         String resultado = "";
         String resultadoPDF = "";
         File pdfFile = null;
@@ -274,7 +274,7 @@ public class DefaultDocumentoService implements DocumentoService{
         if (!"png".equals(ext) && !"jpg".equals(ext)) {
             if("pdf".equals(ext)){
                 pdfFile = OCRFilesPDF(documento, file);
-                img = ImageIO.read(new File(direccion+"\\"+pdfFile.getName()));
+                img = ImageIO.read(new File(direccion+"/"+pdfFile.getName()));
                 resultado = tesseract.doOCR(img);
                 resultadoPDF+= " " + resultado;
                 pdfFile.delete();
@@ -293,8 +293,8 @@ public class DefaultDocumentoService implements DocumentoService{
     
     public File OCRFilesPDF(DocumentoDTO documento,MultipartFile file) throws Exception{
         try {
-            String sourceDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+file.getOriginalFilename();
-            String destinationDir = "C:\\java-exec\\upload-dir\\"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
+            String sourceDir = "./src/main/resources/archivos/"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+file.getOriginalFilename();
+            String destinationDir = "./src/main/resources/archivos/"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
             File sourceFile = new File(sourceDir);
             File destinationFile = new File(destinationDir);
             File imagenesPDF = null;
