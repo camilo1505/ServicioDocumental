@@ -105,6 +105,8 @@ public class DefaultDocumentoService implements DocumentoService{
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
+                File fichero = new File("./src/main/resources/archivos/"+documento.getUsuario()+"/"+documento.getNombre());
+                deleteFolder(fichero);
                 documentoRepository.delete(auxiliar);
                 return modelMapper.map(auxiliar, DocumentoDTO.class);
             }
@@ -151,7 +153,6 @@ public class DefaultDocumentoService implements DocumentoService{
 
     @Override
     public DocumentoDTO eliminarArchivo(DocumentoDTO documento, String archivo) {
-        
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         List<ArchivoDTO> auxiliarArchivos = new ArrayList<>();
@@ -167,6 +168,8 @@ public class DefaultDocumentoService implements DocumentoService{
                         auxiliarArchivos.add(arc);
                     }   
                 }
+                File fichero = new File("./src/main/resources/archivos/"+documento.getUsuario()+"/"+documento.getNombre()+"/"+archivo);
+                deleteFolder(fichero);
                 auxiliar.setArchivo(auxiliarArchivos);
                 auxiliar = documentoRepository.save(auxiliar);
                 return modelMapper.map(auxiliar, DocumentoDTO.class);
@@ -350,6 +353,30 @@ public class DefaultDocumentoService implements DocumentoService{
         return null;
     }
     
-    
+    private void deleteFolder(File fileDel) {
+        if(fileDel.isDirectory()){            
+            
+            if(fileDel.list().length == 0)
+                fileDel.delete();
+            else{
+                
+               for (String temp : fileDel.list()) {
+                   File fileDelete = new File(fileDel, temp);
+                   //recursive delete
+                   deleteFolder(fileDelete);
+               }
+
+               //check the directory again, if empty then delete it
+               if(fileDel.list().length==0)
+                   fileDel.delete();
+               
+            }
+
+        }else{
+            
+            //if file, then delete it
+            fileDel.delete();            
+        }
+    }
     
 }
