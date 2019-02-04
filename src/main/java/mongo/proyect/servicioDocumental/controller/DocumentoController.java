@@ -83,7 +83,7 @@ public class DocumentoController {
     public ResponseEntity<?> guardarArchivo(
             @RequestParam("nombreDocumento") String nombreDocumento,
             @RequestParam("autor")String autor,
-            @RequestParam("archivo") MultipartFile file,
+            @RequestBody MultipartFile file,
             @RequestParam("ocr") boolean ocr) throws Exception{
         
         DocumentoDTO documento = new DocumentoDTO();
