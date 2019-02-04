@@ -122,13 +122,16 @@ public class DocumentoController {
     
     @PutMapping("/cambiarNombreArchivo")
     public ResponseEntity<?> cambiarNombreArchivo(
-            @RequestBody DocumentoDTO documento,
+            @RequestParam("nombreDocumento") String documento,
             @RequestParam("archivo") String archivo,
-            @RequestParam("nombreArchivo") String nombreArchivo){
+            @RequestParam("nombreArchivo") String nombreArchivo,
+            @RequestParam("usuario")String usuario){
 
         DocumentoDTO documentoDTO = new DocumentoDTO();
+        documentoDTO.setNombre("nombreDocumento");
+        documentoDTO.setUsuario(usuario);
         if(documento!=null && !archivo.matches("") && !nombreArchivo.matches("")){
-            documentoDTO = documentoService.cambiarNombreArchivo(documento, archivo, nombreArchivo);
+            documentoDTO = documentoService.cambiarNombreArchivo(documentoDTO, archivo, nombreArchivo);
             if(documentoDTO !=null){
                 return ResponseEntity.ok().build();
             }
