@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("api/v1/documento")
+@RequestMapping("/documento")
 public class DocumentoController {
     @Autowired
     private DocumentoService documentoService;
@@ -52,10 +52,12 @@ public class DocumentoController {
     
     @PutMapping("/editarDocumento")
     public ResponseEntity<?> editarDocumento(
-            @RequestBody DocumentoDTO documento){
+            @RequestBody DocumentoDTO documento,
+            @RequestParam("usuario") String usuario){
+        
         DocumentoDTO documentoDTO = new DocumentoDTO();
         if(documento!=null){
-            documentoDTO = documentoService.editarDocumento(documento);
+            documentoDTO = documentoService.editarDocumento(usuario,documento);
             if(documentoDTO!=null){
                 return ResponseEntity.ok().build();
             }
@@ -82,7 +84,7 @@ public class DocumentoController {
     @PostMapping("/guardarArchivo")
     public ResponseEntity<?> guardarArchivo(
             @RequestParam("nombreDocumento") String nombreDocumento,
-            @RequestParam("autor")String autor,
+            @RequestParam("usuario")String autor,
             @RequestHeader("file") MultipartFile file,
             @RequestParam("ocr") boolean ocr) throws Exception{
         

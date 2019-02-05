@@ -19,7 +19,7 @@ public interface DocumentoService {
     
     DocumentoDTO crearDocumento(DocumentoDTO documento);
     
-    DocumentoDTO editarDocumento(DocumentoDTO documento);
+    DocumentoDTO editarDocumento(String usuario,DocumentoDTO documento);
     
     DocumentoDTO eliminarDocumento(DocumentoDTO documento);
     

@@ -52,6 +52,9 @@ public class DefaultDocumentoService implements DocumentoService{
     @Autowired
     private MongoTemplate mongoTemplate;
     
+    public static final String origen = "./src/main/resources/archivos/";
+    public static final String idiomaOCR = "./src/main/resources/tessdata";
+    
     @Override
     public DocumentoDTO crearDocumento(DocumentoDTO documento) {
         Documento documentoDTO = new Documento();
@@ -78,21 +81,25 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public DocumentoDTO editarDocumento(DocumentoDTO documento) {
+    public DocumentoDTO editarDocumento(String usuario,DocumentoDTO documento) {
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         Optional<Documento> revisar = null;
-        if(documento!=null){
-            revisar = documentoRepository.findById(documento.getId());
-            if(revisar.isPresent()){
-                auxiliar = revisar.get();
-                auxiliar.setNombre(documento.getNombre());
-                auxiliar.setDescripcion(documento.getDescripcion());
-                auxiliar.setEstado(documento.getEstado());
-                auxiliar.setEtiquetas(documento.getEtiquetas());
-                auxiliar = documentoRepository.save(auxiliar);
-                return modelMapper.map(auxiliar, DocumentoDTO.class);
-               }
+        UsuarioDTO propietario = null;
+        propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
+        if(propietario.getUsuario().matches(usuario) || propietario.getTipoUsuario()){
+            if(documento!=null){
+                revisar = documentoRepository.findById(documento.getId());
+                if(revisar.isPresent()){
+                    auxiliar = revisar.get();
+                    auxiliar.setNombre(documento.getNombre());
+                    auxiliar.setDescripcion(documento.getDescripcion());
+                    auxiliar.setEstado(documento.getEstado());
+                    auxiliar.setEtiquetas(documento.getEtiquetas());
+                    auxiliar = documentoRepository.save(auxiliar);
+                    return modelMapper.map(auxiliar, DocumentoDTO.class);
+                }
+            }
         }
         return null;
     }
@@ -101,14 +108,18 @@ public class DefaultDocumentoService implements DocumentoService{
     public DocumentoDTO eliminarDocumento(DocumentoDTO documento) {
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
+        UsuarioDTO propietario = null;
+        propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
         if(documento!=null){
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
-                File fichero = new File("./src/main/resources/archivos/"+documento.getUsuario()+"/"+documento.getNombre());
-                deleteFolder(fichero);
-                documentoRepository.delete(auxiliar);
-                return modelMapper.map(auxiliar, DocumentoDTO.class);
+                if(propietario.getUsuario().matches(auxiliar.getUsuario()) || propietario.getTipoUsuario()){
+                    File fichero = new File(origen+documento.getUsuario()+"/"+documento.getNombre());
+                    deleteFolder(fichero);
+                    documentoRepository.delete(auxiliar);
+                    return modelMapper.map(auxiliar, DocumentoDTO.class);
+                }
             }
         }
         return null;
@@ -121,30 +132,33 @@ public class DefaultDocumentoService implements DocumentoService{
         List<ArchivoDTO> archivos = new ArrayList<>();
         String direccion = "";
         String ocr = "";
+        UsuarioDTO propietario = null;
+        propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
         boolean bandera = false;
-                
         if(documento!=null && file!=null){
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(), documento.getUsuario());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
-                archivos = auxiliar.getArchivo();
-                for(ArchivoDTO fil:archivos){
-                    if(fil.getNombreArchivo().matches(archivoDTO.getNombreArchivo())){
-                        bandera = true;
+                if(propietario.getUsuario().matches(auxiliar.getUsuario()) || propietario.getTipoUsuario()){
+                    archivos = auxiliar.getArchivo();
+                    for(ArchivoDTO fil:archivos){
+                        if(fil.getNombreArchivo().matches(archivoDTO.getNombreArchivo())){
+                            bandera = true;
+                        }
                     }
-                }
-                if(!bandera){
-                    direccion = "./src/main/resources/archivos/"+documento.getUsuario()+"/"+documento.getNombre()+"/"+archivoDTO.getNombreArchivo();
-                    archivoDTO.setURL(direccion);
-                    archivos.add(archivoDTO);
-                    auxiliar.setArchivo(archivos);
-                    storageService.store(file,documento.getUsuario(),documento.getNombre());
-                    if(archivoDTO.isOCR()){
-                        ocr = OCRFiles(documento,file);
+                    if(!bandera){
+                        direccion = origen+documento.getUsuario()+"/"+documento.getNombre()+"/"+archivoDTO.getNombreArchivo();
+                        archivoDTO.setURL(direccion);
+                        archivos.add(archivoDTO);
+                        auxiliar.setArchivo(archivos);
+                        storageService.store(file,documento.getUsuario(),documento.getNombre());
+                        if(archivoDTO.isOCR()){
+                            ocr = OCRFiles(documento,file);
+                        }
+                        archivoDTO.setTextoCompleto(ocr);
+                        auxiliar = documentoRepository.save(auxiliar);
+                        return modelMapper.map(auxiliar, DocumentoDTO.class);
                     }
-                    archivoDTO.setTextoCompleto(ocr);
-                    auxiliar = documentoRepository.save(auxiliar);
-                    return modelMapper.map(auxiliar, DocumentoDTO.class);
                 }
             }
         }
@@ -157,22 +171,26 @@ public class DefaultDocumentoService implements DocumentoService{
         Documento auxiliar = new Documento();
         List<ArchivoDTO> auxiliarArchivos = new ArrayList<>();
         auxiliarArchivos = null;
+        UsuarioDTO propietario = null;
+        propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
         List<ArchivoDTO> archivos = new ArrayList<>();
         if(documento!=null && !archivo.matches("")){
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(),documento.getUsuario());
             if(documentoDTO.isPresent()){
                 auxiliar = documentoDTO.get();
-                archivos = null;
-                for(ArchivoDTO arc:archivos){
-                    if(!arc.getNombreArchivo().matches(archivo)){
-                        auxiliarArchivos.add(arc);
-                    }   
+                if(propietario.getUsuario().matches(auxiliar.getUsuario()) || propietario.getTipoUsuario()){
+                    archivos = null;
+                    for(ArchivoDTO arc:archivos){
+                        if(!arc.getNombreArchivo().matches(archivo)){
+                            auxiliarArchivos.add(arc);
+                        }   
+                    }
+                    File fichero = new File(origen+documento.getUsuario()+"/"+documento.getNombre()+"/"+archivo);
+                    deleteFolder(fichero);
+                    auxiliar.setArchivo(auxiliarArchivos);
+                    auxiliar = documentoRepository.save(auxiliar);
+                    return modelMapper.map(auxiliar, DocumentoDTO.class);
                 }
-                File fichero = new File("./src/main/resources/archivos/"+documento.getUsuario()+"/"+documento.getNombre()+"/"+archivo);
-                deleteFolder(fichero);
-                auxiliar.setArchivo(auxiliarArchivos);
-                auxiliar = documentoRepository.save(auxiliar);
-                return modelMapper.map(auxiliar, DocumentoDTO.class);
             }
         }
         return null;
@@ -184,21 +202,24 @@ public class DefaultDocumentoService implements DocumentoService{
         Optional<Documento> documentoDTO = null;
         MultipartFile file = null;
         Documento auxiliar = new Documento();
+        UsuarioDTO propietario = null;
+        propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
         List<ArchivoDTO> archivos = new ArrayList<>();
         if(documento!=null && archivo.matches("")){
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(),documento.getUsuario());
             if(documentoDTO.isPresent()){
-                auxiliar = documentoDTO.get();
-                archivos = auxiliar.getArchivo();
-                for(ArchivoDTO arc:archivos){
-                    if(arc.getNombreArchivo().matches(archivo)){
-                        arc.setNombreArchivo(nombreArchivo);
-                        
+                if(propietario.getUsuario().matches(auxiliar.getUsuario()) || propietario.getTipoUsuario()){
+                    auxiliar = documentoDTO.get();
+                    archivos = auxiliar.getArchivo();
+                    for(ArchivoDTO arc:archivos){
+                        if(arc.getNombreArchivo().matches(archivo)){
+                            arc.setNombreArchivo(nombreArchivo);
+                        }
                     }
+                    auxiliar.setArchivo(archivos);
+                    auxiliar = documentoRepository.save(auxiliar);
+                    return modelMapper.map(auxiliar, DocumentoDTO.class);
                 }
-                auxiliar.setArchivo(archivos);
-                auxiliar = documentoRepository.save(auxiliar);
-                return modelMapper.map(auxiliar, DocumentoDTO.class);
             }
         }
         return null;
@@ -262,9 +283,9 @@ public class DefaultDocumentoService implements DocumentoService{
     
     public String OCRFiles(DocumentoDTO documento,MultipartFile file) throws Exception{
         String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-        String direccion = "./src/main/resources/archivos/"+documento.getUsuario()+"/"+documento.getNombre()+"/";
+        String direccion = origen+documento.getUsuario()+"/"+documento.getNombre()+"/";
         Tesseract tesseract = new Tesseract();
-        tesseract.setDatapath("./src/main/resources/tessdata");
+        tesseract.setDatapath(idiomaOCR);
         String resultado = "";
         String resultadoPDF = "";
         File pdfFile = null;
@@ -292,8 +313,8 @@ public class DefaultDocumentoService implements DocumentoService{
     
     public File OCRFilesPDF(DocumentoDTO documento,MultipartFile file) throws Exception{
         try {
-            String sourceDir = "./src/main/resources/archivos/"+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+file.getOriginalFilename();
-            String destinationDir = "./src/main/resources/archivos/"+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
+            String sourceDir = origen+documento.getUsuario()+"\\"+documento.getNombre()+"\\"+file.getOriginalFilename();
+            String destinationDir = origen+documento.getUsuario()+"\\"+documento.getNombre()+"\\";
             File sourceFile = new File(sourceDir);
             File destinationFile = new File(destinationDir);
             File imagenesPDF = null;
@@ -353,7 +374,7 @@ public class DefaultDocumentoService implements DocumentoService{
     public List<DocumentoDTO> consultarEntreEtiquetas(String usuario,List<String> etiquetas, String consulta) {
         List<Documento> documentos = new ArrayList<>();
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        documentos=documentoRepository.findEtiqueta(usuario,etiquetas);
+        documentos=documentoRepository.findEntreEtiquetas(usuario,etiquetas,consulta);
         if(!documentos.isEmpty()){
             for(Documento documento: documentos){
                 documentosDTO.add(modelMapper.map(documento, DocumentoDTO.class));
@@ -363,30 +384,21 @@ public class DefaultDocumentoService implements DocumentoService{
         return null;
     }
     
-    
-    
     private void deleteFolder(File fileDel) {
-        if(fileDel.isDirectory()){            
-            
+        if(fileDel.isDirectory()){
             if(fileDel.list().length == 0)
                 fileDel.delete();
             else{
-                
                for (String temp : fileDel.list()) {
                    File fileDelete = new File(fileDel, temp);
-                   //recursive delete
                    deleteFolder(fileDelete);
                }
-
-               //check the directory again, if empty then delete it
                if(fileDel.list().length==0)
                    fileDel.delete();
                
             }
 
         }else{
-            
-            //if file, then delete it
             fileDel.delete();            
         }
     }

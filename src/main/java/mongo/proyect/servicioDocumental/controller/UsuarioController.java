@@ -24,14 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("api/v1/usuario")
+@RequestMapping("/usuario")
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
     
     @GetMapping("/consultarUsuario")
     public ResponseEntity<?> consultarUsuario(
-            @RequestParam("nombreUsuario") String Usuario, 
+            @RequestParam("usuario") String Usuario, 
             @RequestParam("password")String password){
         
         UsuarioDTO usuarioDTO = new UsuarioDTO();
@@ -46,7 +46,7 @@ public class UsuarioController {
     
     @GetMapping("/tipoUsuario")
     public ResponseEntity<?> tipoUsuario(
-            @RequestParam("nombreUsuario") String Usuario, 
+            @RequestParam("usuario") String Usuario, 
             @RequestParam("password")String password){
         
         UsuarioDTO usuarioDTO = new UsuarioDTO();
