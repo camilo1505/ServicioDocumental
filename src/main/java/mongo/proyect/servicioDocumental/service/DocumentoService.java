@@ -29,14 +29,18 @@ public interface DocumentoService {
     
     DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
     
-    List<DocumentoDTO> consultarDocumento(String consulta, String usuario);
-    
-    List<DocumentoDTO> mostrarDocumentos(String usuario,boolean tipoConsulta,String consulta);
+    List<DocumentoDTO> mostrarDocumentos(String usuario,String consulta);
     
     List<DocumentoDTO> misDocumentos(String autor);
     
     List<Etiquetas> etiquetas();
     
-    List<DocumentoDTO> consultaEtiqueta(String etiqueta);
+    List<DocumentoDTO> consultarEtiquetas(String usuario,List<String> etiquetas);
+    
+    List<DocumentoDTO> consultarEntreEtiquetas(String usuario,List<String> etiquetas, String consulta);
+    
+    List<DocumentoDTO> consultarMisDocumentos(String usuario, String consulta);
+    
+    List<DocumentoDTO> todosLosDocumentos(String usuario);
     
 }

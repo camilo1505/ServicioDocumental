@@ -203,38 +203,13 @@ public class DefaultDocumentoService implements DocumentoService{
         }
         return null;
     }
-    @Override
-    public List<DocumentoDTO> consultarDocumento(String consulta, String usuario) {
-        
-        List<Documento> documentos = new ArrayList<>();
-        List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        List<String> consultaList = new ArrayList<>();
-        String[] consultaSplit = consulta.split(" ");
-        for(String eti:consultaSplit){
-            consultaList.add(eti);
-        }
-        documentos = documentoRepository.findConsulta(consulta,usuario);
-        if(!documentos.isEmpty())
-        {
-            for(Documento documento: documentos){
-                documentosDTO.add(modelMapper.map(documento, DocumentoDTO.class));
-            }
-            return documentosDTO;
-        }
-        return null;
-    }
 
     @Override
-    public List<DocumentoDTO> mostrarDocumentos(String usuario,boolean tipoConsulta,String consulta) {
+    public List<DocumentoDTO> mostrarDocumentos(String usuario,String consulta) {
         
         List<Documento> documentos = new ArrayList<>();
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        if(tipoConsulta){
-            documentos = documentoRepository.findConsulta(consulta,usuario);
-        }
-        else{
-            documentos = documentoRepository.consultaGeneral(usuario);
-        }
+        documentos = documentoRepository.findConsulta(consulta,usuario);
         if(!documentos.isEmpty()){
             for(Documento documento: documentos){
                 documentosDTO.add(modelMapper.map(documento,DocumentoDTO.class));
@@ -243,6 +218,22 @@ public class DefaultDocumentoService implements DocumentoService{
         }
         return null;
     }
+
+    @Override
+    public List<DocumentoDTO> todosLosDocumentos(String usuario) {
+        List<Documento> documentos = new ArrayList<>();
+        List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        documentos = documentoRepository.consultaGeneral(usuario);
+        if(!documentos.isEmpty()){
+            for(Documento documento: documentos){
+                documentosDTO.add(modelMapper.map(documento,DocumentoDTO.class));
+            }
+            return documentosDTO;
+        }
+        return null;
+    }
+    
+    
 
     @Override
     public List<DocumentoDTO> misDocumentos(String autor) {
@@ -262,6 +253,11 @@ public class DefaultDocumentoService implements DocumentoService{
         }
         
         return null;
+    }
+
+    @Override
+    public List<DocumentoDTO> consultarMisDocumentos(String usuario, String consulta) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public String OCRFiles(DocumentoDTO documento,MultipartFile file) throws Exception{
@@ -340,10 +336,10 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public List<DocumentoDTO> consultaEtiqueta(String etiqueta) {
+    public List<DocumentoDTO> consultarEtiquetas(String usuario,List<String> etiquetas) {
         List<Documento> documentos = new ArrayList<>();
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        documentos = documentoRepository.findEtiqueta(etiqueta);
+        documentos=documentoRepository.findEtiqueta(usuario,etiquetas);
         if(!documentos.isEmpty()){
             for(Documento documento: documentos){
                     documentosDTO.add(modelMapper.map(documento, DocumentoDTO.class));
@@ -352,6 +348,22 @@ public class DefaultDocumentoService implements DocumentoService{
             }
         return null;
     }
+
+    @Override
+    public List<DocumentoDTO> consultarEntreEtiquetas(String usuario,List<String> etiquetas, String consulta) {
+        List<Documento> documentos = new ArrayList<>();
+        List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        documentos=documentoRepository.findEtiqueta(usuario,etiquetas);
+        if(!documentos.isEmpty()){
+            for(Documento documento: documentos){
+                documentosDTO.add(modelMapper.map(documento, DocumentoDTO.class));
+            }
+            return documentosDTO;
+        }
+        return null;
+    }
+    
+    
     
     private void deleteFolder(File fileDel) {
         if(fileDel.isDirectory()){            

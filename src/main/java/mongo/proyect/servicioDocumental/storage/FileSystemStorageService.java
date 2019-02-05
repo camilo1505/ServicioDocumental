@@ -31,7 +31,6 @@ public class FileSystemStorageService {
 	@PostConstruct
 	public void init() {
 		this.uploadLocation = Paths.get(Constants.UPLOAD_LOCATION);
-                System.out.println("cosa: " + this.uploadLocation);
 		try {
 			Files.createDirectories(uploadLocation);
 		} catch (IOException e) {

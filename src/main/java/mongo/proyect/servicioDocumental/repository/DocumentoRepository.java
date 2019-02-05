@@ -31,9 +31,11 @@ public interface DocumentoRepository extends MongoRepository<Documento, ObjectId
     @Query("{usuario:'?0'}")
     List<Documento> findAutorMisDocumentos(String usuario);
     
-    @Query("{etiquetas: { $in: [?0] }, estado:true}")
-    List<Documento> findEtiqueta(String etiquetas);
+    @Query("{$or:[ {$and:[{etiquetas: { $in: [?1]},{estado:true}]} , {$and:[{etiquetas: {$in: [?1]}} , {usuario:?0}]}]")
+    List<Documento> findEtiqueta(String usuario,List<String> etiquetas);
     
+    @Query("{$or:[ {$and:[{etiquetas: { $in: [?1]},{estado:true},{nombre:{$regex: ?2,$options:'i'}]} , {$and:[{etiquetas: {$in: [?1]}} , {usuario:?0},{nombre:{$regex: ?2,$options:'i'}]}]")
+    List<Documento> findEntreEtiquetas(String usuario,List<String> etiquetas, String consulta);
     
     @Query("{nombre:'?0',usuario:'?1'}")
     Optional<Documento> nombreAutor( String nombreDocumento, String usuario);

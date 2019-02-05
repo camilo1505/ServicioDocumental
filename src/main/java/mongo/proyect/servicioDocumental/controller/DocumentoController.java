@@ -142,11 +142,9 @@ public class DocumentoController {
     @GetMapping("/documentos")
     public ResponseEntity<?> documentos(
             @RequestParam("usuario") String usuario){
-        boolean tipoConsulta=false;
-        String consulta ="";
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         if(!usuario.matches("")){
-            documentosDTO = documentoService.mostrarDocumentos(usuario,tipoConsulta,consulta);
+            documentosDTO = documentoService.todosLosDocumentos(usuario);
             if(documentosDTO !=null){
                 return ResponseEntity.ok(documentosDTO);
             }
@@ -167,28 +165,55 @@ public class DocumentoController {
         return ResponseEntity.badRequest().build();
     }
     
-    @GetMapping("/consultarDocumento")
-    public ResponseEntity<?> consultarDocumento(
+    @GetMapping("/consultar")
+    public ResponseEntity<?> consultar(
             @RequestParam("consulta") String consulta,
             @RequestParam("usuario") String usuario,
-            @RequestParam("tipoConsulta")boolean tipoConsulta){
+            @RequestParam("etiquetas") List<String> etiquetas,
+            @RequestParam("tipoConsulta") String tipoConsulta){
         
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
-        if(!consulta.matches("")){
-            documentosDTO = documentoService.consultarDocumento(consulta,usuario);
-            if(documentosDTO !=null){
-                return ResponseEntity.ok(documentosDTO);
+        if(!usuario.matches("")){
+            if(tipoConsulta=="1"){
+                if(!consulta.matches("")){
+                    documentosDTO = documentoService.mostrarDocumentos(usuario, consulta);
+                }
+                else{
+                    documentosDTO = documentoService.todosLosDocumentos(usuario);
+                }
             }
-            return null;
+            if(tipoConsulta=="2"){
+                if(!consulta.matches("")){
+                    documentosDTO = documentoService.consultarMisDocumentos(usuario,consulta);
+                }
+                else{
+                    documentosDTO = documentoService.misDocumentos(usuario);
+                }
+            }
+            if(tipoConsulta=="3"){
+                if(!etiquetas.isEmpty()){
+                    documentosDTO = documentoService.consultarEtiquetas(usuario,etiquetas);
+                }
+                else{
+                    documentosDTO = documentoService.todosLosDocumentos(usuario);
+                }
+            }
+            if(tipoConsulta=="4"){
+                if(!etiquetas.isEmpty()){
+                    if(!consulta.matches("")){
+                        documentosDTO = documentoService.consultarEntreEtiquetas(usuario,etiquetas,consulta);
+                    }
+                }
+                else{
+                    documentosDTO = documentoService.misDocumentos(usuario);
+                }
+            }
         }
-        if(tipoConsulta){
-            documentosDTO = documentoService.mostrarDocumentos(usuario,tipoConsulta,consulta);
+        if(!documentosDTO.isEmpty())
+        {
             return ResponseEntity.ok(documentosDTO);
         }
-        if(consulta.matches("")){
-            documentosDTO = documentoService.mostrarDocumentos(usuario,tipoConsulta,consulta);
-        }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
     
     @GetMapping("/cloudEtiquetas")
@@ -204,10 +229,11 @@ public class DocumentoController {
         
     @GetMapping("/consultarEtiqueta")
     public ResponseEntity<?> busquedaEtiqueta(
-    @RequestParam("etiqueta")String etiqueta){
+    @RequestParam("usuario") String usuario,
+    @RequestParam("etiqueta")List<String> etiqueta){
         List<DocumentoDTO> documentos = new ArrayList<>();
-        if(!etiqueta.matches("")){
-            documentos = documentoService.consultaEtiqueta(etiqueta);
+        if(!etiqueta.isEmpty()){
+            documentos = documentoService.consultarEtiquetas(usuario,etiqueta);
             if(!documentos.isEmpty())
             {
                 return ResponseEntity.ok(documentos);
