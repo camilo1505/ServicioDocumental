@@ -171,9 +171,11 @@ public class DocumentoController {
     public ResponseEntity<?> consultar(
             @RequestParam("consulta") String consulta,
             @RequestParam("usuario") String usuario,
-            @RequestParam("etiqueta") String etiquetas,
+            @RequestParam("etiqueta") String etiqueta,
             @RequestParam("tipoConsulta") String tipoConsulta){
         
+        List<String> etiquetas = new ArrayList<>();
+        etiquetas.add(etiqueta);
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         if(!usuario.matches("")){
             if(tipoConsulta=="1"){
