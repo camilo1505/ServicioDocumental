@@ -48,4 +48,10 @@ public interface DocumentoRepository extends MongoRepository<Documento, ObjectId
         
     @Query("{$or:[{'estado':true},{'usuario':'?0'}]}")
     List<Documento> consultaGeneral(String autor);
+    
+    @Query("{$and:[{etiquetas: { $in: [?1]}},{usuario:?0}]}")
+    List<Documento> findEtiquetaMisDocumentos(String usuario,List<String> etiquetas);
+    
+    @Query("{$and:[{etiquetas: { $in: [?1]}},{usuario:?0},{nombre:{$regex: ?2,$options:'i'}}]}")
+    List<Documento> findEntreEtiquetasMisDocumentos(String usuario,List<String> etiquetas, String consulta);
 }

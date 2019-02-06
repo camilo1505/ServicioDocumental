@@ -384,6 +384,34 @@ public class DefaultDocumentoService implements DocumentoService{
         return null;
     }
     
+    @Override
+    public List<DocumentoDTO> consultarEtiquetasMisDocumentos(String usuario,List<String> etiquetas) {
+        List<Documento> documentos = new ArrayList<>();
+        List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        documentos=documentoRepository.findEtiquetaMisDocumentos(usuario,etiquetas);
+        if(!documentos.isEmpty()){
+            for(Documento documento: documentos){
+                    documentosDTO.add(modelMapper.map(documento, DocumentoDTO.class));
+                }
+                return documentosDTO;
+            }
+        return null;
+    }
+
+    @Override
+    public List<DocumentoDTO> consultarEntreEtiquetasMisDocumentos(String usuario,List<String> etiquetas, String consulta) {
+        List<Documento> documentos = new ArrayList<>();
+        List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        documentos=documentoRepository.findEntreEtiquetasMisDocumentos(usuario,etiquetas,consulta);
+        if(!documentos.isEmpty()){
+            for(Documento documento: documentos){
+                documentosDTO.add(modelMapper.map(documento, DocumentoDTO.class));
+            }
+            return documentosDTO;
+        }
+        return null;
+    }
+    
     private void deleteFolder(File fileDel) {
         if(fileDel.isDirectory()){
             if(fileDel.list().length == 0)

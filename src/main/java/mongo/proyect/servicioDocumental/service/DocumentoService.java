@@ -43,4 +43,8 @@ public interface DocumentoService {
     
     List<DocumentoDTO> todosLosDocumentos(String usuario);
     
+    List<DocumentoDTO> consultarEtiquetasMisDocumentos(String usuario,List<String> etiquetas);
+    
+    List<DocumentoDTO> consultarEntreEtiquetasMisDocumentos(String usuario,List<String> etiquetas, String consulta);
+    
 }

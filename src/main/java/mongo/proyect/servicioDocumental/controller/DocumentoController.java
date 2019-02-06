@@ -172,44 +172,46 @@ public class DocumentoController {
             @RequestParam("consulta") String consulta,
             @RequestParam("usuario") String usuario,
             @RequestParam("etiqueta") String etiqueta,
-            @RequestParam("tipoConsulta") String tipoConsulta){
+            @RequestParam("misDocumentos") boolean misDocumentos){
         
         List<String> etiquetas = new ArrayList<>();
         etiquetas.add(etiqueta);
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         if(!usuario.matches("")){
-            if(tipoConsulta=="1"){
-                if(!consulta.matches("")){
-                    documentosDTO = documentoService.mostrarDocumentos(usuario, consulta);
-                }
-                else{
-                    documentosDTO = documentoService.todosLosDocumentos(usuario);
-                }
-            }
-            if(tipoConsulta=="2"){
-                if(!consulta.matches("")){
-                    documentosDTO = documentoService.consultarMisDocumentos(usuario,consulta);
-                }
-                else{
-                    documentosDTO = documentoService.misDocumentos(usuario);
-                }
-            }
-            if(tipoConsulta=="3"){
-                if(!etiquetas.isEmpty()){
-                    documentosDTO = documentoService.consultarEtiquetas(usuario,etiquetas);
-                }
-                else{
-                    documentosDTO = documentoService.todosLosDocumentos(usuario);
-                }
-            }
-            if(tipoConsulta=="4"){
+            if(!misDocumentos){
                 if(!etiquetas.isEmpty()){
                     if(!consulta.matches("")){
                         documentosDTO = documentoService.consultarEntreEtiquetas(usuario,etiquetas,consulta);
                     }
+                    else{
+                        documentosDTO = documentoService.consultarEtiquetas(usuario,etiquetas);
+                    }
                 }
                 else{
-                    documentosDTO = documentoService.misDocumentos(usuario);
+                    if(!consulta.matches("")){
+                        documentosDTO = documentoService.mostrarDocumentos(usuario, consulta);
+                    }
+                    else{
+                        documentosDTO = documentoService.todosLosDocumentos(usuario);
+                    }
+                }
+            }
+            else{
+                if(!etiquetas.isEmpty()){
+                    if(!consulta.matches("")){
+                        documentosDTO = documentoService.consultarEntreEtiquetasMisDocumentos(usuario,etiquetas,consulta);////general
+                    }
+                    else{
+                        documentosDTO = documentoService.consultarEtiquetasMisDocumentos(usuario,etiquetas);/// mia
+                    }
+                }
+                else{
+                    if(!consulta.matches("")){
+                        documentosDTO = documentoService.consultarMisDocumentos(usuario,consulta);
+                    }
+                    else{
+                        documentosDTO = documentoService.misDocumentos(usuario);
+                    }
                 }
             }
         }
