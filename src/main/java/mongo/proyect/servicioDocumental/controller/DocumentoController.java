@@ -171,7 +171,7 @@ public class DocumentoController {
     public ResponseEntity<?> consultar(
             @RequestParam("consulta") String consulta,
             @RequestParam("usuario") String usuario,
-            @RequestParam("etiquetas") List<String> etiquetas,
+            @RequestParam("etiquetas") String etiquetas,
             @RequestParam("tipoConsulta") String tipoConsulta){
         
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
