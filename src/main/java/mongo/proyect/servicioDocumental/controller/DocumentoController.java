@@ -175,7 +175,9 @@ public class DocumentoController {
             @RequestParam("misDocumentos") boolean misDocumentos){
         
         List<String> etiquetas = new ArrayList<>();
-        etiquetas.add(etiqueta);
+        if(!etiqueta.matches("")){
+            etiquetas.add(etiqueta);
+        }
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         if(!usuario.matches("")){
             if(!misDocumentos){
@@ -236,10 +238,14 @@ public class DocumentoController {
     @GetMapping("/consultarEtiqueta")
     public ResponseEntity<?> busquedaEtiqueta(
     @RequestParam("usuario") String usuario,
-    @RequestParam("etiqueta")List<String> etiqueta){
+    @RequestParam("etiqueta")String etiqueta){
         List<DocumentoDTO> documentos = new ArrayList<>();
-        if(!etiqueta.isEmpty()){
-            documentos = documentoService.consultarEtiquetas(usuario,etiqueta);
+        List<String> etiquetas = new ArrayList<>();
+        if(!etiqueta.matches("")){
+            etiquetas.add(etiqueta);
+        }
+        if(!etiquetas.isEmpty()){
+            documentos = documentoService.consultarEtiquetas(usuario,etiquetas);
             if(!documentos.isEmpty())
             {
                 return ResponseEntity.ok(documentos);
