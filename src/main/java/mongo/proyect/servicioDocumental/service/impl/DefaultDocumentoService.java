@@ -147,7 +147,7 @@ public class DefaultDocumentoService implements DocumentoService{
                         }
                     }
                     if(!bandera){
-                        direccion = origen+documento.getUsuario()+"/"+documento.getNombre()+"/"+archivoDTO.getNombreArchivo();
+                        direccion = documento.getUsuario()+"/"+documento.getNombre()+"/"+archivoDTO.getNombreArchivo();
                         archivoDTO.setURL(direccion);
                         archivos.add(archivoDTO);
                         auxiliar.setArchivo(archivos);
@@ -198,7 +198,6 @@ public class DefaultDocumentoService implements DocumentoService{
 
     @Override
     public DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento, String archivo, String nombreArchivo) {
-        
         Optional<Documento> documentoDTO = null;
         MultipartFile file = null;
         Documento auxiliar = new Documento();
@@ -227,7 +226,6 @@ public class DefaultDocumentoService implements DocumentoService{
 
     @Override
     public List<DocumentoDTO> mostrarDocumentos(String usuario,String consulta) {
-        
         List<Documento> documentos = new ArrayList<>();
         List<DocumentoDTO> documentosDTO = new ArrayList<>();
         documentos = documentoRepository.findConsulta(consulta,usuario);
@@ -254,8 +252,6 @@ public class DefaultDocumentoService implements DocumentoService{
         return null;
     }
     
-    
-
     @Override
     public List<DocumentoDTO> misDocumentos(String autor) {
         List<Documento> documentos = new ArrayList<>();
@@ -272,13 +268,21 @@ public class DefaultDocumentoService implements DocumentoService{
                 return documentosDTO;
             }
         }
-        
         return null;
     }
 
     @Override
     public List<DocumentoDTO> consultarMisDocumentos(String usuario, String consulta) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Documento> documentos = new ArrayList<>();
+        List<DocumentoDTO> documentosDTO = new ArrayList<>();
+        documentos = documentoRepository.findConsultaMisDocumentos(consulta,usuario);
+        if(!documentos.isEmpty()){
+            for(Documento documento: documentos){
+                documentosDTO.add(modelMapper.map(documento,DocumentoDTO.class));
+            }
+            return documentosDTO;
+        }
+        return null;
     }
     
     public String OCRFiles(DocumentoDTO documento,MultipartFile file) throws Exception{
@@ -422,10 +426,8 @@ public class DefaultDocumentoService implements DocumentoService{
                    deleteFolder(fileDelete);
                }
                if(fileDel.list().length==0)
-                   fileDel.delete();
-               
+                   fileDel.delete();  
             }
-
         }else{
             fileDel.delete();            
         }

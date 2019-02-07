@@ -18,16 +18,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DocumentoRepository extends MongoRepository<Documento, ObjectId>{
     
-    
-    //@Query("{nombre:{$regex:'?0',$options:'i'},usuario:{$regex:'?1',$options:'i'}, estado:true}")
-    //Optional<Documento> findNombreDocumentoAutor( String nombreDocumento, String usuario);
-    
-    //@Query("{nombre:{$regex:'?0',$options:'i'},estado:true}")
-    //List<Documento> findNombreDocumento( String nombreDocumento);
-    
-    //@Query("{usuario:{$regex:'?0',$options:'i'},estado:true}")
-    //List<Documento> findAutor(String usuario);
-
     @Query("{usuario:'?0'}")
     List<Documento> findAutorMisDocumentos(String usuario);
     
