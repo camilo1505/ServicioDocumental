@@ -125,8 +125,8 @@ public class DocumentoController {
     @PutMapping("/cambiarNombreArchivo")
     public ResponseEntity<?> cambiarNombreArchivo(
             @RequestParam("nombreDocumento") String documento,
-            @RequestParam("archivo") String archivo,
-            @RequestParam("nombreArchivo") String nombreArchivo,
+            @RequestParam("nombreActual") String archivo,
+            @RequestParam("nombreNuevo") String nombreArchivo,
             @RequestParam("usuario")String usuario){
 
         DocumentoDTO documentoDTO = new DocumentoDTO();
