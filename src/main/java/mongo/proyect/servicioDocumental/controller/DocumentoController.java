@@ -87,7 +87,7 @@ public class DocumentoController {
             @RequestParam("usuario")String autor,
             @RequestHeader("file") MultipartFile file,
             @RequestParam("ocr") boolean ocr) throws Exception{
-        
+        System.out.println("Entro el archivo " + file.getOriginalFilename());
         DocumentoDTO documento = new DocumentoDTO();
         documento.setNombre(nombreDocumento);
         documento.setUsuario(autor);
