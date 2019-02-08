@@ -170,21 +170,23 @@ public class DefaultDocumentoService implements DocumentoService{
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         List<ArchivoDTO> auxiliarArchivos = new ArrayList<>();
-        auxiliarArchivos = null;
         UsuarioDTO propietario = null;
         propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
         List<ArchivoDTO> archivos = new ArrayList<>();
         if(documento!=null && !archivo.matches("")){
+            System.out.println("voy a eliminar");
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(),documento.getUsuario());
             if(documentoDTO.isPresent()){
+                System.out.println("documento encontrado");
                 auxiliar = documentoDTO.get();
                 if(propietario.getUsuario().matches(auxiliar.getUsuario()) || propietario.getTipoUsuario()){
-                    archivos = null;
+                    System.out.println("verificacion de usuario");
                     for(ArchivoDTO arc:archivos){
                         if(!arc.getNombreArchivo().matches(archivo)){
                             auxiliarArchivos.add(arc);
                         }   
                     }
+                    System.out.println("eliminacion");
                     File fichero = new File(origen+documento.getUsuario()+"/"+documento.getNombre()+"/"+archivo);
                     deleteFolder(fichero);
                     auxiliar.setArchivo(auxiliarArchivos);

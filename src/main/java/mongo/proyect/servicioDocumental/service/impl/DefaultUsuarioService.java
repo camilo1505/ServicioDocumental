@@ -114,7 +114,6 @@ public class DefaultUsuarioService implements UsuarioService{
         if(!nombreUsuario.matches("")){
             usuario = usuarioRepository.findByUsuario(nombreUsuario);
             if(usuario.isPresent()){
-                
                 return modelMapper.map(usuario.get(), UsuarioDTO.class);
             }
         }
