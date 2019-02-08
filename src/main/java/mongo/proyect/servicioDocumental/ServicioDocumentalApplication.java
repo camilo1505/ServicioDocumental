@@ -20,17 +20,13 @@ public class ServicioDocumentalApplication extends WebMvcConfigurerAdapter{
         @Value("${staticresourceloader.imageFileLocation.path}")
         private String staticImageFilePath;
 
-        @Value("${staticresourceloader.txtFileLocation.path}")
-        private String staticTxtFilePath;
-
 	public static void main(String[] args) {
 		SpringApplication.run(ServicioDocumentalApplication.class, args);
 	}
          
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/api/image/**").addResourceLocations(staticImageFilePath);
-            registry.addResourceHandler("/api/txt/**").addResourceLocations(staticTxtFilePath);
+            registry.addResourceHandler("/resources/**").addResourceLocations(staticImageFilePath);
         }  
 
 }

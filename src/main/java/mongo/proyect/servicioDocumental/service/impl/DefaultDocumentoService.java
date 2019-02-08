@@ -147,7 +147,7 @@ public class DefaultDocumentoService implements DocumentoService{
                         }
                     }
                     if(!bandera){
-                        direccion = documento.getUsuario()+"/"+documento.getNombre()+"/"+archivoDTO.getNombreArchivo();
+                        direccion = "/resources/" + documento.getUsuario()+"/"+documento.getNombre()+"/"+archivoDTO.getNombreArchivo();
                         archivoDTO.setURL(direccion);
                         archivos.add(archivoDTO);
                         auxiliar.setArchivo(archivos);
