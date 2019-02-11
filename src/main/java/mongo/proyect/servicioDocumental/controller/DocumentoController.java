@@ -121,18 +121,16 @@ public class DocumentoController {
         return ResponseEntity.badRequest().build();
     }
     
-    @PutMapping("/cambiarNombreArchivo")
-    public ResponseEntity<?> cambiarNombreArchivo(
-            @RequestParam("nombreDocumento") String documento,
-            @RequestParam("nombreActual") String archivo,
-            @RequestParam("nombreNuevo") String nombreArchivo,
-            @RequestParam("usuario")String usuario){
-
+    @PutMapping("/editarArchivo")
+    public ResponseEntity<?> editarArchivo(
+            @RequestParam("usuario")String usuario,
+            @RequestParam("nombreViejo") String nombreViejo,
+            @RequestBody("archivo") ArchivoDTO archivo){
         DocumentoDTO documentoDTO = new DocumentoDTO();
-        documentoDTO.setNombre("nombreDocumento");
+        documentoDTO.setNombre(nombreViejo);
         documentoDTO.setUsuario(usuario);
-        if(documento!=null && !archivo.matches("") && !nombreArchivo.matches("")){
-            documentoDTO = documentoService.cambiarNombreArchivo(documentoDTO, archivo, nombreArchivo);
+        if(!usuario.matches("") && !archivo.getNombreArchivo().matches("")){
+            documentoDTO = documentoService.cambiarNombreArchivo(documentoDTO, nombreViejo, archivo.getNombreArchivo());
             if(documentoDTO !=null){
                 return ResponseEntity.ok().build();
             }
@@ -253,4 +251,4 @@ public class DocumentoController {
         return ResponseEntity.badRequest().build();
     }
 
-}
+} 
