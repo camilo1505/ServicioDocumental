@@ -204,7 +204,7 @@ public class DefaultDocumentoService implements DocumentoService{
         UsuarioDTO propietario = null;
         propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
         List<ArchivoDTO> archivos = new ArrayList<>();
-        if(documento!=null && archivo.matches("")){
+        if(documento!=null && !archivo.matches("")){
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(),documento.getUsuario());
             if(documentoDTO.isPresent()){
                 if(propietario.getUsuario().matches(auxiliar.getUsuario()) || propietario.getTipoUsuario()){
