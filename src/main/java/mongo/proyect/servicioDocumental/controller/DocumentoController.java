@@ -85,22 +85,31 @@ public class DocumentoController {
     public ResponseEntity<?> guardarArchivo(
             @RequestParam("nombreDocumento") String nombreDocumento,
             @RequestParam("usuario")String autor,
-            @RequestHeader("file") MultipartFile file,
-            @RequestParam("ocr") boolean ocr) throws Exception{
+            @RequestHeader("file") MultipartFile[] file,
+            @RequestParam("ocr") String ocr) throws Exception{
+        
+        String[] parts = ocr.split(",");
+        int conteoArchivos = 0;
+        String bandera = "";
         DocumentoDTO documento = new DocumentoDTO();
+        ArchivoDTO archivo = new ArchivoDTO();
         documento.setNombre(nombreDocumento);
         documento.setUsuario(autor);
-        ArchivoDTO archivo = new ArchivoDTO();
-        archivo.setOCR(ocr);
-        archivo.setNombreArchivo(file.getOriginalFilename());
         DocumentoDTO documentoDTO = new DocumentoDTO();
-        if(documento!=null && archivo!=null){
-            documentoDTO = documentoService.guardarArchivo(documento,archivo,file);
-            if(documentoDTO !=null){
-                return ResponseEntity.ok().build();
+        conteoArchivos=parts.length;
+        for(MultipartFile fil:file){
+            bandera = parts[conteoArchivos];
+            archivo.setOCR(false);
+            if(bandera.matches("true")){
+                archivo.setOCR(true);
+            }
+            archivo.setNombreArchivo(fil.getOriginalFilename());
+            documentoDTO = documentoService.guardarArchivo(documento,archivo,fil);
+            if(documento==null){
+                return ResponseEntity.badRequest().build();
             }
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok().build();
     }
     
     @PutMapping("/eliminarArchivo")
@@ -124,8 +133,8 @@ public class DocumentoController {
     @PutMapping("/editarArchivo")
     public ResponseEntity<?> editarArchivo(
             @RequestParam("usuario")String usuario,
-            @RequestParam("nombreViejo") String nombreViejo,
             @RequestParam("documento") String documento,
+            @RequestParam("nombreViejo") String nombreViejo,
             @RequestBody ArchivoDTO archivo){
         DocumentoDTO documentoDTO = new DocumentoDTO();
         documentoDTO.setNombre(documento);
@@ -150,7 +159,7 @@ public class DocumentoController {
                 return ResponseEntity.ok(documentosDTO);
             }
         }      
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/misDocumentos")
@@ -163,7 +172,7 @@ public class DocumentoController {
                 return ResponseEntity.ok(documentosDTO);
             }
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
     
     @GetMapping("/consultar")
@@ -220,7 +229,7 @@ public class DocumentoController {
         {
             return ResponseEntity.ok(documentosDTO);
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
     
     @GetMapping("/cloudEtiquetas")
@@ -250,7 +259,7 @@ public class DocumentoController {
                 return ResponseEntity.ok(documentos);
             }
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
 
 } 

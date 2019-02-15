@@ -349,14 +349,22 @@ public class DefaultDocumentoService implements DocumentoService{
     @Override
     public List<Etiquetas> etiquetas()
     {
+        
         List<Etiquetas> lista = new ArrayList<>();
-        MapReduceResults<Etiquetas> results = mongoTemplate.mapReduce("documento",
-                "classpath:map.js",
-                "classpath:reduce.js",
-                Etiquetas.class);
-        for(Etiquetas eti:results){
-            lista.add(eti);
+        System.out.println("voy a poner el cloud");
+        if(documentoRepository.count()>0){
+            System.out.println("mayor a 0 o.O");
+            MapReduceResults<Etiquetas> results = mongoTemplate.mapReduce("documento",
+                    "classpath:map.js",
+                    "classpath:reduce.js",
+                    Etiquetas.class);
+
+            for(Etiquetas eti:results){
+                lista.add(eti);
+            }
+            return lista;
         }
+        System.out.println("no entre");
         return lista;
     }
 
