@@ -85,24 +85,16 @@ public class DocumentoController {
     public ResponseEntity<?> guardarArchivo(
             @RequestParam("nombreDocumento") String nombreDocumento,
             @RequestParam("usuario")String autor,
-            @RequestHeader("file") MultipartFile[] file,
-            @RequestParam("ocr") String ocr) throws Exception{
+            @RequestHeader("file") MultipartFile[] file) throws Exception{
         
-        String[] parts = ocr.split(",");
         int conteoArchivos = 0;
-        String bandera = "";
         DocumentoDTO documento = new DocumentoDTO();
         ArchivoDTO archivo = new ArchivoDTO();
         documento.setNombre(nombreDocumento);
         documento.setUsuario(autor);
         DocumentoDTO documentoDTO = new DocumentoDTO();
-        conteoArchivos=parts.length;
         for(MultipartFile fil:file){
-            bandera = parts[conteoArchivos];
-            archivo.setOCR(false);
-            if(bandera.matches("true")){
-                archivo.setOCR(true);
-            }
+            archivo.setOCR(true);
             archivo.setNombreArchivo(fil.getOriginalFilename());
             documentoDTO = documentoService.guardarArchivo(documento,archivo,fil);
             if(documento==null){
