@@ -197,7 +197,7 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento, String archivo, String nombreArchivo) {
+    public DocumentoDTO actualizarArchivo(DocumentoDTO documento, String archivo, String nombreArchivo) {
         Optional<Documento> documentoDTO = null;
         MultipartFile file = null;
         Documento auxiliar = new Documento();

@@ -127,13 +127,12 @@ public class DocumentoController {
             @RequestParam("usuario")String usuario,
             @RequestParam("documento") String documento,
             @RequestParam("nombreViejo") String nombreViejo,
-            @RequestBody ArchivoDTO archivo){
+            @RequestParam("nombreNuevo") String nombreNuevo) throws Exception{
         DocumentoDTO documentoDTO = new DocumentoDTO();
         documentoDTO.setNombre(documento);
         documentoDTO.setUsuario(usuario);
-        if(!usuario.matches("") && !documento.matches("")){
-            System.out.println("voy a hacer el editar");
-            documentoDTO = documentoService.cambiarNombreArchivo(documentoDTO, nombreViejo, archivo.getNombreArchivo());
+        if(!usuario.matches("") && !documento.matches("") && !nombreNuevo.matches("")){
+            documentoDTO = documentoService.actualizarArchivo(documentoDTO, nombreViejo, nombreNuevo);
             if(documentoDTO !=null){
                 return ResponseEntity.ok().build();
             }
