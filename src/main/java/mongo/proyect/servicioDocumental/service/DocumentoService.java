@@ -27,7 +27,7 @@ public interface DocumentoService {
     
     DocumentoDTO eliminarArchivo(DocumentoDTO documento,String archivo);
     
-    DocumentoDTO cambiarNombreArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
+    DocumentoDTO actualizarArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
     
     List<DocumentoDTO> mostrarDocumentos(String usuario,String consulta);
     
