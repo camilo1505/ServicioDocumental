@@ -5,12 +5,14 @@
  */
 package mongo.proyect.servicioDocumental.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import mongo.proyect.servicioDocumental.entity.Etiquetas;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
+import static mongo.proyect.servicioDocumental.service.impl.DefaultDocumentoService.origen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -109,12 +111,11 @@ public class DocumentoController {
             @RequestParam ("documento") String documento,
             @RequestParam("archivo") String archivo,
             @RequestParam("usuario") String usuario){
-        
-        DocumentoDTO documentoDTO = new DocumentoDTO();
+       DocumentoDTO documentoDTO = new DocumentoDTO();
         documentoDTO.setNombre(documento);
         documentoDTO.setUsuario(usuario);
         if(!documento.matches("") && !archivo.matches("")){
-            documentoDTO = documentoService.eliminarArchivo(documentoDTO, archivo);
+            documentoDTO = documentoService.eliminarArchivo(documentoDTO, usuario+"/"+documento+"/"+archivo);
             if(documentoDTO !=null){
                 return ResponseEntity.ok().build();
             }
@@ -132,7 +133,6 @@ public class DocumentoController {
         documentoDTO.setNombre(documento);
         documentoDTO.setUsuario(usuario);
         if(!usuario.matches("") && !documento.matches("")){
-            System.out.println("voy a hacer el editar");
             documentoDTO = documentoService.cambiarNombreArchivo(documentoDTO, nombreViejo, archivo.getNombreArchivo());
             if(documentoDTO !=null){
                 return ResponseEntity.ok().build();
@@ -151,7 +151,7 @@ public class DocumentoController {
                 return ResponseEntity.ok(documentosDTO);
             }
         }      
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(documentosDTO);
     }
 
     @GetMapping("/misDocumentos")
@@ -253,5 +253,5 @@ public class DocumentoController {
         }
         return ResponseEntity.notFound().build();
     }
-
-} 
+    
+}

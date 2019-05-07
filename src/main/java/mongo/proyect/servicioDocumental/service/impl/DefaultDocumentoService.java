@@ -167,27 +167,28 @@ public class DefaultDocumentoService implements DocumentoService{
     public DocumentoDTO eliminarArchivo(DocumentoDTO documento, String archivo) {
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
-        List<ArchivoDTO> auxiliarArchivos = new ArrayList<>();
         UsuarioDTO propietario = null;
         propietario = usuarioService.buscarUsuarioNombre(documento.getUsuario());
         List<ArchivoDTO> archivos = new ArrayList<>();
         if(documento!=null && !archivo.matches("")){
-            System.out.println("voy a eliminar");
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(),documento.getUsuario());
             if(documentoDTO.isPresent()){
-                System.out.println("documento encontrado");
                 auxiliar = documentoDTO.get();
+                archivos = auxiliar.getArchivo();
                 if(propietario.getUsuario().matches(auxiliar.getUsuario()) || propietario.getTipoUsuario()){
-                    System.out.println("verificacion de usuario");
+                    int posicion = 0;
+                    int puesto = 0;
                     for(ArchivoDTO arc:archivos){
-                        if(!arc.getNombreArchivo().matches(archivo)){
-                            auxiliarArchivos.add(arc);
-                        }   
+                        
+                        if(arc.getURL().matches("/resources/"+archivos)){
+                            puesto = posicion;
+                        }
+                        posicion++;
                     }
-                    System.out.println("eliminacion");
-                    File fichero = new File(origen+documento.getUsuario()+"/"+documento.getNombre()+"/"+archivo);
+                    archivos.remove(puesto);
+                    File fichero = new File(origen+archivo);
                     deleteFolder(fichero);
-                    auxiliar.setArchivo(auxiliarArchivos);
+                    auxiliar.setArchivo(archivos);
                     auxiliar = documentoRepository.save(auxiliar);
                     return modelMapper.map(auxiliar, DocumentoDTO.class);
                 }
@@ -349,22 +350,21 @@ public class DefaultDocumentoService implements DocumentoService{
     @Override
     public List<Etiquetas> etiquetas()
     {
-        
         List<Etiquetas> lista = new ArrayList<>();
-        System.out.println("voy a poner el cloud");
         if(documentoRepository.count()>0){
-            System.out.println("mayor a 0 o.O");
             MapReduceResults<Etiquetas> results = mongoTemplate.mapReduce("documento",
                     "classpath:map.js",
                     "classpath:reduce.js",
                     Etiquetas.class);
-
-            for(Etiquetas eti:results){
+       for(Etiquetas eti:results){
                 lista.add(eti);
             }
             return lista;
         }
-        System.out.println("no entre");
+        Etiquetas etiqueta = new Etiquetas();
+        etiqueta.setId("");
+        etiqueta.setValue(1);
+        lista.add(etiqueta);
         return lista;
     }
 
