@@ -208,7 +208,8 @@ public class DefaultDocumentoService implements DocumentoService{
         if(documento!=null && !archivo.matches("")){
             documentoDTO = documentoRepository.nombreAutor(documento.getNombre(),documento.getUsuario());
             if(documentoDTO.isPresent()){
-                if(propietario.getUsuario().matches(auxiliar.getUsuario()) || propietario.getTipoUsuario()){
+                if(propietario.getUsuario().matches(documento.getUsuario()) || propietario.getTipoUsuario()){
+                    
                     auxiliar = documentoDTO.get();
                     archivos = auxiliar.getArchivo();
                     for(ArchivoDTO arc:archivos){

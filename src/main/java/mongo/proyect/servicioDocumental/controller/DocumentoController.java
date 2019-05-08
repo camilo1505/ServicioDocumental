@@ -129,12 +129,15 @@ public class DocumentoController {
             @RequestParam("documento") String documento,
             @RequestParam("nombreViejo") String nombreViejo,
             @RequestParam("nombreNuevo") String nombreNuevo) throws Exception{
+        
         DocumentoDTO documentoDTO = new DocumentoDTO();
         documentoDTO.setNombre(documento);
         documentoDTO.setUsuario(usuario);
 
         if(!usuario.matches("") && !documento.matches("") && !nombreNuevo.matches("")){
+            System.out.println("hasta aca todo bien");
             documentoDTO = documentoService.actualizarArchivo(documentoDTO, nombreViejo, nombreNuevo);
+            System.out.println("aun sigo bien");
             if(documentoDTO !=null){
                 return ResponseEntity.ok().build();
             }
@@ -165,7 +168,7 @@ public class DocumentoController {
                 return ResponseEntity.ok(documentosDTO);
             }
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(new ArrayList<>());
     }
     
     @GetMapping("/consultar")
