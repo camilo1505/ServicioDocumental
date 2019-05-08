@@ -115,7 +115,7 @@ public class DocumentoController {
         documentoDTO.setNombre(documento);
         documentoDTO.setUsuario(usuario);
         if(!documento.matches("") && !archivo.matches("")){
-            documentoDTO = documentoService.eliminarArchivo(documentoDTO, usuario+"/"+documento+"/"+archivo);
+            documentoDTO = documentoService.eliminarArchivo(documentoDTO, usuario+"/"+documento+"/"+archivo, archivo);
             if(documentoDTO !=null){
                 return ResponseEntity.ok().build();
             }

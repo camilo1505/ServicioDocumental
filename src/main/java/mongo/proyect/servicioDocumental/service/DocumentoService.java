@@ -25,7 +25,7 @@ public interface DocumentoService {
     
     DocumentoDTO guardarArchivo(DocumentoDTO documento, ArchivoDTO archivoDTO, MultipartFile file) throws Exception;
     
-    DocumentoDTO eliminarArchivo(DocumentoDTO documento,String archivo);
+    DocumentoDTO eliminarArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
     
     DocumentoDTO actualizarArchivo(DocumentoDTO documento,String archivo, String nombreArchivo);
     
