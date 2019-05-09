@@ -164,7 +164,7 @@ public class DefaultDocumentoService implements DocumentoService{
     }
 
     @Override
-    public DocumentoDTO eliminarArchivo(DocumentoDTO documento, String archivo, String nombreArchivo) {
+    public DocumentoDTO eliminarArchivo(DocumentoDTO documento, String archivo) {
         Optional<Documento> documentoDTO = null;
         Documento auxiliar = new Documento();
         UsuarioDTO propietario = null;
@@ -176,7 +176,16 @@ public class DefaultDocumentoService implements DocumentoService{
                 auxiliar = documentoDTO.get();
                 archivos = auxiliar.getArchivo();
                 if(propietario.getUsuario().matches(auxiliar.getUsuario()) || propietario.getTipoUsuario()){
-                    archivos.removeIf(n-> (n.getNombreArchivo().matches(nombreArchivo)));
+                    int posicion = 0;
+                    int puesto = 0;
+                    for(ArchivoDTO arc:archivos){
+                        
+                        if(arc.getURL().matches("/resources/"+archivos)){
+                            puesto = posicion;
+                        }
+                        posicion++;
+                    }
+                    archivos.remove(puesto);
                     File fichero = new File(origen+archivo);
                     deleteFolder(fichero);
                     auxiliar.setArchivo(archivos);
