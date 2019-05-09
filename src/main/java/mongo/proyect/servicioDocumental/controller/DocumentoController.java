@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author junpa
  */
 
-@CrossOrigin(origins = "http://localhost:8081")
+//@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/documento")
 public class DocumentoController {
