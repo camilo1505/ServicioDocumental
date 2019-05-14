@@ -332,7 +332,7 @@ public class DefaultDocumentoService implements DocumentoService{
                 @SuppressWarnings("unchecked")
                 List<PDPage> list = document.getDocumentCatalog().getAllPages();
                 String fileName = sourceFile.getName().replace(".pdf", "");
-                int pageNumber = 1;
+                int pageNumber = 0;
                 BufferedImage image = list.get(pageNumber).convertToImage();
                 File outputfile = new File(destinationDir + fileName + "_" + pageNumber + ".png");
                 ImageIO.write(image, "png", outputfile);
