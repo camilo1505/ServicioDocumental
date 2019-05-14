@@ -5,14 +5,12 @@
  */
 package mongo.proyect.servicioDocumental.controller;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import mongo.proyect.servicioDocumental.dto.ArchivoDTO;
 import mongo.proyect.servicioDocumental.dto.DocumentoDTO;
 import mongo.proyect.servicioDocumental.entity.Etiquetas;
 import mongo.proyect.servicioDocumental.service.DocumentoService;
-import static mongo.proyect.servicioDocumental.service.impl.DefaultDocumentoService.origen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
