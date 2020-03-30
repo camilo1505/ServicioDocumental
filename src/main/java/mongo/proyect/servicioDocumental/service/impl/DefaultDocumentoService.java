@@ -50,8 +50,8 @@ public class DefaultDocumentoService implements DocumentoService{
     @Autowired
     private MongoTemplate mongoTemplate;
     
-    public static final String origen = "./src/main/resources/archivos/";
-    public static final String idiomaOCR = "./src/main/resources/tessdata";
+    public static final String origen = "./archivos/";
+    public static final String idiomaOCR = "./tessdata";
     
     @Override
     public DocumentoDTO crearDocumento(DocumentoDTO documento) {

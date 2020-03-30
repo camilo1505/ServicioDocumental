@@ -91,7 +91,7 @@ public class FileSystemStorageService {
         
         public void crearArchivo(String autor,String documento){
              try {
-                    File directorio = new File("./src/main/resources/archivos/"+autor+"/"+documento);
+                    File directorio = new File("./archivos/"+autor+"/"+documento);
                     directorio.mkdirs();
                 
             } catch(Exception e) {}
